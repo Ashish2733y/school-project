@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Next Pro — Student Fee Management System</title>
+    <meta name="description"
+        content="School Next Pro - A comprehensive student fee management system for schools. Manage admissions, track fees, and handle payments efficiently.">
+    <meta name="theme-color" content="#008b8b">
+
+    <!-- Fonts: Inter (body) + Playfair Display (headings) + JetBrains Mono (numbers) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- PDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <!-- App Logic (must be deferred so DOM is ready) -->
+    <script src="upperP.js"></script>
+</head>
+
+<body>
+    <!-- ── FLOATING PARTICLES ──────────────────────────────── -->
+    <div class="particles" id="particles"></div>
+
+    <!-- ── HEADER ─────────────────────────────────────────── -->
+    <header class="header" id="mainHeader">
+        <div class="header-inner">
+            <!-- Brand -->
+            <div class="logo" onclick="openEditSchoolModal()" style="cursor:pointer;"
+                title="Click to Edit School Profile & Details">
+                <div class="logo-icon" id="headerSchoolLogo">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="logo-text">
+                    <h1 id="headerSchoolName">School Next <span>Pro</span></h1>
+                    <p id="headerSchoolSub">Student Fee Management System</p>
+                </div>
+            </div>
+
+            <!-- Stats & Actions -->
+            <div class="header-stats">
+                <!-- Edit School Pill -->
+                <div class="stat-pill edit-school-pill" id="editSchoolPill" onclick="openEditSchoolModal()"
+                    title="Edit School Profile, Logo & Password">
+                    <i class="fas fa-edit"></i>
+                    <span>Edit School</span>
+                </div>
+
+                <!-- Students pill -->
+                <div class="stat-pill" id="totalStudentsPill" onclick="toggleStudentList()">
+                    <i class="fas fa-users"></i>
+                    <span id="totalStudentsCount">0</span>&nbsp;Students
+                </div>
+                <div class="student-dropdown" id="studentDropdown" style="display:none;"></div>
+
+                <!-- Dues pill -->
+                <div class="stat-pill" id="totalDuePill" onclick="toggleDueList()">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span id="totalDueCount">0</span>&nbsp;Dues
+                </div>
+                <div class="student-dropdown" id="dueDropdown" style="display:none;"></div>
+
+                <!-- Theme Switcher Pill -->
+                <div class="stat-pill theme-pill" id="themePill" onclick="cycleTheme()"
+                    title="Switch 3-Color Dynamic Palette">
+                    <i class="fas fa-palette"></i>
+                    <span id="themeName">⚡ Cyber Neon</span>
+                </div>
+
+                <!-- Logout -->
+                <div class="stat-pill logout-pill" id="logoutPill" onclick="handleLogout()"
+                    title="Logout School Account">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ── MAIN APP ────────────────────────────────────────── -->
+    <main class="main-container">
+
+        <!-- Navigation Tabs -->
+        <div class="tab-container">
+            <button class="tab-btn active" id="tabNewAdmission" onclick="switchTab('newAdmission')">
+                <i class="fas fa-user-plus"></i>
+                <span>New Admission</span>
+            </button>
+            <button class="tab-btn" id="tabSearchStudent" onclick="switchTab('searchStudent')">
+                <i class="fas fa-search"></i>
+                <span>Search by ID</span>
+            </button>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════════
+             NEW ADMISSION SECTION
+        ══════════════════════════════════════════════════════ -->
+        <section class="content-section active" id="sectionNewAdmission">
+            <div class="section-header">
+                <h2><i class="fas fa-user-plus"></i> New Student Admission</h2>
+                <p>Fill in the student details to register a new admission</p>
+            </div>
+
+            <form id="admissionForm" class="admission-form" onsubmit="return handleAdmission(event)">
+
+                <!-- ── Student Information ──────────────────── -->
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <i class="fas fa-id-card"></i>
+                        <h3>Student Information</h3>
+                    </div>
+                    <div class="form-grid">
+
+                        <!-- Profile Photo Upload -->
+                        <div class="form-group full-width profile-upload-group">
+                            <label><i class="fas fa-camera"></i> Student Profile Photo</label>
+                            <div class="profile-upload-wrapper">
+                                <div class="profile-preview-box" id="admissionPhotoPreview">
+                                    <i class="fas fa-user-graduate"></i>
+                                </div>
+                                <div class="profile-upload-controls">
+                                    <input type="file" id="stdPhotoInput" accept="image/*"
+                                        onchange="handlePhotoUpload(event, 'admissionPhotoPreview', 'stdPhotoData')"
+                                        style="display:none;">
+                                    <button type="button" class="btn-upload-photo"
+                                        onclick="document.getElementById('stdPhotoInput').click()">
+                                        <i class="fas fa-upload"></i> Upload Photo
+                                    </button>
+                                    <button type="button" class="btn-remove-photo" id="btnRemoveAdmissionPhoto"
+                                        onclick="removeUploadedPhoto('admissionPhotoPreview', 'stdPhotoData')"
+                                        style="display:none;">
+                                        <i class="fas fa-trash"></i> Remove
+                                    </button>
+                                    <input type="hidden" id="stdPhotoData" value="">
+                                    <small class="upload-hint">Upload student passport size photo (JPG, PNG,
+                                        WEBP)</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Student ID -->
+                        <div class="form-group">
+                            <label for="stdId"><i class="fas fa-hashtag"></i> Student ID</label>
+                            <input type="number" id="stdId" placeholder="e.g. 1001" required>
+                        </div>
+
+                        <!-- Student Name -->
+                        <div class="form-group">
+                            <label for="stdName"><i class="fas fa-user"></i> Student Name</label>
+                            <input type="text" id="stdName" placeholder="Enter full name" required>
+                        </div>
+
+                        <!-- Father Name -->
+                        <div class="form-group">
+                            <label for="stdFatherName"><i class="fas fa-male"></i> Father's Name</label>
+                            <input type="text" id="stdFatherName" placeholder="Enter father's name" required>
+                        </div>
+
+                        <!-- Mother Name -->
+                        <div class="form-group">
+                            <label for="stdMotherName"><i class="fas fa-female"></i> Mother's Name</label>
+                            <input type="text" id="stdMotherName" placeholder="Enter mother's name" required>
+                        </div>
+
+                        <!-- Address -->
+                        <div class="form-group full-width">
+                            <label for="stdAddress"><i class="fas fa-map-marker-alt"></i> Address</label>
+                            <textarea id="stdAddress" placeholder="Enter complete address" rows="2" required></textarea>
+                        </div>
+
+                        <!-- Mobile -->
+                        <div class="form-group">
+                            <label for="stdMobile"><i class="fas fa-phone"></i> Mobile Number</label>
+                            <input type="tel" id="stdMobile" placeholder="10-digit mobile number" pattern="[0-9]{10}"
+                                maxlength="10" required>
+                        </div>
+
+                        <!-- Class -->
+                        <div class="form-group">
+                            <label for="stdClass"><i class="fas fa-chalkboard"></i> Class</label>
+                            <select id="stdClass" required onchange="updateFeePreview()">
+                                <option value="">Select Class</option>
+                                <option value="Nursery">Nursery</option>
+                                <option value="LKG">LKG</option>
+                                <option value="UKG">UKG</option>
+                                <option value="1">Class 1</option>
+                                <option value="2">Class 2</option>
+                                <option value="3">Class 3</option>
+                                <option value="4">Class 4</option>
+                                <option value="5">Class 5</option>
+                                <option value="6">Class 6</option>
+                                <option value="7">Class 7</option>
+                                <option value="8">Class 8</option>
+                                <option value="9">Class 9</option>
+                                <option value="10">Class 10</option>
+                                <option value="11">Class 11</option>
+                                <option value="12">Class 12</option>
+                            </select>
+                        </div>
+
+                        <!-- Section -->
+                        <div class="form-group">
+                            <label for="stdSection"><i class="fas fa-layer-group"></i> Section</label>
+                            <select id="stdSection" required>
+                                <option value="">Select Section</option>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Transport Details ────────────────────── -->
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <i class="fas fa-bus"></i>
+                        <h3>Transport Details</h3>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="busNumber"><i class="fas fa-bus-alt"></i> Bus Number</label>
+                            <input type="number" id="busNumber" placeholder="e.g. 1">
+                        </div>
+                        <div class="form-group">
+                            <label for="busDistance"><i class="fas fa-road"></i> Distance (in KM)</label>
+                            <select id="busDistance" onchange="updateFeePreview()">
+                                <option value="">Select Distance</option>
+                                <option value="5">1 to 5 KM — ₹500</option>
+                                <option value="10">5 to 10 KM — ₹1,000</option>
+                                <option value="15">10 to 15 KM — ₹1,500</option>
+                                <option value="20">15 to 20 KM — ₹2,000</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Fee Structure Preview ────────────────── -->
+                <div class="form-card fee-preview-card">
+                    <div class="form-card-header">
+                        <i class="fas fa-calculator"></i>
+                        <h3>Fee Structure Preview</h3>
+                    </div>
+                    <div class="fee-preview">
+                        <!-- One-Time Fees -->
+                        <div class="fee-section">
+                            <h4><i class="fas fa-star"></i> One-Time Fees (At Admission)</h4>
+                            <div class="fee-row">
+                                <span>Admission Fee</span>
+                                <span class="fee-amount" id="previewAdmissionFee">₹500</span>
+                            </div>
+                            <div class="fee-row">
+                                <span>Annual Fee <small>(valid for 1 year)</small></span>
+                                <span class="fee-amount" id="previewAnnualFee">₹200</span>
+                            </div>
+                            <div class="fee-row">
+                                <span>Activity Fee</span>
+                                <span class="fee-amount" id="previewActivityFee">₹500</span>
+                            </div>
+                        </div>
+
+                        <!-- Monthly Fees -->
+                        <div class="fee-section">
+                            <h4><i class="fas fa-calendar-alt"></i> Monthly Fees</h4>
+                            <div class="fee-row">
+                                <span>Tuition Fee</span>
+                                <span class="fee-amount" id="previewTuitionFee">₹200</span>
+                            </div>
+                            <div class="fee-row">
+                                <span>Bus Fee</span>
+                                <span class="fee-amount" id="previewBusFee">₹0</span>
+                            </div>
+                            <div class="fee-row monthly-total">
+                                <span>Monthly Total</span>
+                                <span class="fee-amount" id="previewMonthlyTotal">₹650</span>
+                            </div>
+                        </div>
+
+                        <!-- Grand Total -->
+                        <div class="fee-section total-section">
+                            <div class="fee-row grand-total">
+                                <span><i class="fas fa-coins"></i> Total at Admission</span>
+                                <span class="fee-amount" id="previewGrandTotal">₹1,250</span>
+                            </div>
+                            <div class="fee-row"
+                                style="margin-top:0.5rem;background:var(--success-bg);border-radius:var(--radius-sm);padding:0.6rem 0.8rem;border:1px solid var(--success-border);">
+                                <span><i class="fas fa-hand-holding-usd"></i> Paid Amount</span>
+                                <span class="fee-amount" id="previewPaidAmount" style="color:var(--success);">₹0</span>
+                            </div>
+                            <div class="fee-row" id="previewDueRow"
+                                style="margin-top:0.35rem;background:var(--danger-bg);border-radius:var(--radius-sm);padding:0.6rem 0.8rem;border:1px solid var(--danger-border);">
+                                <span><i class="fas fa-exclamation-circle"></i> Remaining Due</span>
+                                <span class="fee-amount" id="previewDueStatus" style="color:var(--danger);">⚠️ Due:
+                                    ₹1,250</span>
+                            </div>
+                            <small class="fee-note" style="display:block;margin-top:0.5rem;">
+                                Total = Admission Fee + Annual Fee + Activity Fee + Tuition Fee + Bus Fee
+                            </small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── Admission Fee Input ──────────────────── -->
+                <div class="form-card">
+                    <div class="form-card-header">
+                        <i class="fas fa-rupee-sign"></i>
+                        <h3>Admission Fee Input</h3>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="feeTypeSelect"><i class="fas fa-list"></i> Select Fee Type</label>
+                            <select id="feeTypeSelect" required onchange="updateFeeTypeSelection()">
+                                <option value="">-- Choose Fee Type --</option>
+                                <option value="admission">Admission Fee</option>
+                                <option value="annual">Annual Fee (valid for 1 year)</option>
+                                <option value="activity">Activity Fee</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="admissionFeeInput"><i class="fas fa-money-bill-wave"></i> Fee Amount</label>
+                            <input type="number" id="admissionFeeInput" placeholder="Enter fee amount" value="0" min="0"
+                                required onchange="updateFeePreview()">
+                        </div>
+                    </div>
+
+                    <div class="form-grid" style="margin-top:0; padding-top:0; border-top:1px solid var(--border);">
+                        <div class="form-group">
+                            <label for="admissionMonth"><i class="fas fa-calendar"></i> Admission Month</label>
+                            <select id="admissionMonth">
+                                <option value="January">January</option>
+                                <option value="February">February</option>
+                                <option value="March">March</option>
+                                <option value="April">April</option>
+                                <option value="May">May</option>
+                                <option value="June">June</option>
+                                <option value="July">July</option>
+                                <option value="August">August</option>
+                                <option value="September">September</option>
+                                <option value="October">October</option>
+                                <option value="November">November</option>
+                                <option value="December">December</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="admissionYear"><i class="fas fa-calendar-alt"></i> Year</label>
+                            <input type="number" id="admissionYear" value="2026" min="2020" max="2040">
+                        </div>
+                    </div>
+
+                    <div class="form-grid" style="margin-top:0; padding-top:0; border-top:1px solid var(--border);">
+                        <div class="form-group full-width">
+                            <label for="paidAmountInput"><i class="fas fa-hand-holding-usd"></i> Paid Amount (at
+                                Admission) <span style="color:var(--danger); font-weight:700;">*</span></label>
+                            <input type="number" id="paidAmountInput" placeholder="Enter amount paid now (Required)"
+                                min="0" required oninput="updateFeePreview()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="btn-primary btn-submit" id="submitAdmission">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Register Admission &amp; Calculate Fees</span>
+                </button>
+            </form>
+        </section>
+
+        <!-- ══════════════════════════════════════════════════════
+             SEARCH STUDENT SECTION
+        ══════════════════════════════════════════════════════ -->
+        <section class="content-section" id="sectionSearchStudent">
+            <div class="section-header">
+                <h2><i class="fas fa-search"></i> Search Student by ID</h2>
+                <p>Enter the student ID to view and manage their details</p>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="search-bar-container">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Enter Student ID (e.g. 1001)"
+                        onkeyup="handleSearchKeyup(event)">
+                    <button class="btn-search" onclick="searchStudent()">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ── Search Results ──────────────────────────── -->
+            <div id="searchResults" class="search-results" style="display:none;">
+
+                <!-- Student Profile Card -->
+                <div class="student-profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar" id="profileAvatar">
+                            <i class="fas fa-user-graduate"></i>
+                        </div>
+                        <div class="profile-info">
+                            <h3 id="profileName">—</h3>
+                            <p id="profileId">—</p>
+                            <div class="profile-badges">
+                                <span class="badge badge-class" id="profileClass">—</span>
+                                <span class="badge badge-section" id="profileSection">—</span>
+                                <span class="badge badge-bus" id="profileBus">—</span>
+                            </div>
+                        </div>
+                        <div class="profile-actions">
+                            <button class="btn-print-receipt" onclick="generateAndPrintReceipt(currentSearchId)"
+                                title="Print Fee Receipt">
+                                <i class="fas fa-print"></i> Print Receipt
+                            </button>
+                            <button class="btn-edit-profile" onclick="toggleEditMode()" id="btnEditProfile">
+                                <i class="fas fa-pen"></i> Edit
+                            </button>
+                            <button class="btn-delete-profile" onclick="deleteStudent(currentSearchId, event)"
+                                id="btnDeleteProfile">
+                                <i class="fas fa-trash-alt"></i> Delete
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="profile-details-grid">
+                        <div class="profile-detail">
+                            <i class="fas fa-male"></i>
+                            <div>
+                                <small>Father's Name</small>
+                                <p id="profileFather">—</p>
+                            </div>
+                        </div>
+                        <div class="profile-detail">
+                            <i class="fas fa-female"></i>
+                            <div>
+                                <small>Mother's Name</small>
+                                <p id="profileMother">—</p>
+                            </div>
+                        </div>
+                        <div class="profile-detail">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <small>Mobile</small>
+                                <p id="profileMobile">—</p>
+                            </div>
+                        </div>
+                        <div class="profile-detail">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <small>Address</small>
+                                <p id="profileAddress">—</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Student Card (hidden by default) -->
+                <div class="edit-student-card" id="editStudentCard" style="display:none;">
+                    <div class="form-card-header">
+                        <i class="fas fa-user-edit"></i>
+                        <h3>Edit Student Details</h3>
+                    </div>
+                    <form id="editForm" class="form-grid" onsubmit="return saveStudentEdits(event)">
+                        <!-- Photo update -->
+                        <div class="form-group full-width profile-upload-group">
+                            <label><i class="fas fa-camera"></i> Update Profile Photo</label>
+                            <div class="profile-upload-wrapper">
+                                <div class="profile-preview-box" id="editPhotoPreview">
+                                    <i class="fas fa-user-graduate"></i>
+                                </div>
+                                <div class="profile-upload-controls">
+                                    <input type="file" id="editPhotoInput" accept="image/*"
+                                        onchange="handlePhotoUpload(event, 'editPhotoPreview', 'editPhotoData')"
+                                        style="display:none;">
+                                    <button type="button" class="btn-upload-photo"
+                                        onclick="document.getElementById('editPhotoInput').click()">
+                                        <i class="fas fa-upload"></i> Change Photo
+                                    </button>
+                                    <button type="button" class="btn-remove-photo" id="btnRemoveEditPhoto"
+                                        onclick="removeUploadedPhoto('editPhotoPreview', 'editPhotoData')"
+                                        style="display:none;">
+                                        <i class="fas fa-trash"></i> Remove
+                                    </button>
+                                    <input type="hidden" id="editPhotoData" value="">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="editName"><i class="fas fa-user"></i> Student Name</label>
+                            <input type="text" id="editName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editFather"><i class="fas fa-male"></i> Father's Name</label>
+                            <input type="text" id="editFather" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editMother"><i class="fas fa-female"></i> Mother's Name</label>
+                            <input type="text" id="editMother" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editMobile"><i class="fas fa-phone"></i> Mobile</label>
+                            <input type="tel" id="editMobile" pattern="[0-9]{10}" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="editAddress"><i class="fas fa-map-marker-alt"></i> Address</label>
+                            <textarea id="editAddress" rows="2" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editClass"><i class="fas fa-chalkboard"></i> Class</label>
+                            <select id="editClass" required>
+                                <option value="Nursery">Nursery</option>
+                                <option value="LKG">LKG</option>
+                                <option value="UKG">UKG</option>
+                                <option value="1">Class 1</option>
+                                <option value="2">Class 2</option>
+                                <option value="3">Class 3</option>
+                                <option value="4">Class 4</option>
+                                <option value="5">Class 5</option>
+                                <option value="6">Class 6</option>
+                                <option value="7">Class 7</option>
+                                <option value="8">Class 8</option>
+                                <option value="9">Class 9</option>
+                                <option value="10">Class 10</option>
+                                <option value="11">Class 11</option>
+                                <option value="12">Class 12</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editSection"><i class="fas fa-layer-group"></i> Section</label>
+                            <select id="editSection" required>
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                                <option value="D">D</option>
+                                <option value="E">E</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editBusNumber"><i class="fas fa-bus"></i> Bus Number</label>
+                            <input type="number" id="editBusNumber">
+                        </div>
+                        <div class="form-group">
+                            <label for="editBusDistance"><i class="fas fa-road"></i> Distance</label>
+                            <select id="editBusDistance" required>
+                                <option value="5">1 to 5 KM — ₹500</option>
+                                <option value="10">5 to 10 KM — ₹1,000</option>
+                                <option value="15">10 to 15 KM — ₹1,500</option>
+                                <option value="20">15 to 20 KM — ₹2,000</option>
+                            </select>
+                        </div>
+
+                        <div class="form-actions full-width">
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                            <button type="button" class="btn-cancel" onclick="toggleEditMode()">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- ── Fee Dashboard ───────────────────────── -->
+                <div class="fee-dashboard">
+                    <h3 class="fee-dashboard-title">
+                        <i class="fas fa-receipt"></i> Fee Dashboard
+                    </h3>
+
+                    <!-- Fee Summary Cards -->
+                    <div class="fee-summary-grid">
+                        <div class="fee-summary-card card-admission">
+                            <div class="fee-summary-icon"><i class="fas fa-ticket-alt"></i></div>
+                            <div class="fee-summary-info">
+                                <small>Admission Fee</small>
+                                <h4 id="dashAdmissionFee">₹0</h4>
+                                <span class="fee-status paid" id="dashAdmissionStatus">Paid</span>
+                            </div>
+                        </div>
+                        <div class="fee-summary-card card-annual">
+                            <div class="fee-summary-icon"><i class="fas fa-calendar-check"></i></div>
+                            <div class="fee-summary-info">
+                                <small>Annual Fee</small>
+                                <h4 id="dashAnnualFee">₹200</h4>
+                                <span class="fee-status" id="dashAnnualStatus">—</span>
+                            </div>
+                        </div>
+                        <div class="fee-summary-card card-monthly">
+                            <div class="fee-summary-icon"><i class="fas fa-calendar-alt"></i></div>
+                            <div class="fee-summary-info">
+                                <small>Monthly Fee</small>
+                                <h4 id="dashMonthlyFee">₹0</h4>
+                                <span class="fee-status info">Per Month</span>
+                            </div>
+                        </div>
+                        <div class="fee-summary-card card-due">
+                            <div class="fee-summary-icon"><i class="fas fa-exclamation-circle"></i></div>
+                            <div class="fee-summary-info">
+                                <small>Total Due</small>
+                                <h4 id="dashTotalDue">₹0</h4>
+                                <span class="fee-status warning" id="dashDueStatus">No Due</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Due Breakdown -->
+                    <div class="fee-due-breakdown" id="dashDueBreakdown" style="display:none;"></div>
+
+                    <!-- Monthly Fee Payment -->
+                    <div class="fee-payment-card">
+                        <div class="form-card-header">
+                            <i class="fas fa-money-check-alt"></i>
+                            <h3>Monthly Fee Payment</h3>
+                        </div>
+                        <div class="payment-form">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="paymentYear"><i class="fas fa-calendar-alt"></i> Year</label>
+                                    <input type="number" id="paymentYear" value="2026" min="2020" max="2040"
+                                        onchange="updateMultiMonthInfo()">
+                                </div>
+                                <div class="form-group">
+                                    <label for="paymentAmount"><i class="fas fa-rupee-sign"></i> Amount Paying</label>
+                                    <input type="number" id="paymentAmount" placeholder="Enter amount" min="0">
+                                </div>
+                            </div>
+
+                            <!-- Admission Due Checkbox Option -->
+                            <div id="admissionDueOptionContainer"
+                                style="display:none; margin-top:0.8rem; margin-bottom:0.8rem; background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.35); border-radius:var(--radius-sm); padding:0.65rem 0.95rem;">
+                                <label
+                                    style="display:flex; align-items:center; gap:0.65rem; cursor:pointer; font-weight:700; color:var(--danger); font-size:0.88rem; margin:0;">
+                                    <input type="checkbox" id="payAdmissionDueCheckbox"
+                                        onchange="updateMultiMonthInfo()"
+                                        style="width:18px; height:18px; accent-color:var(--danger);">
+                                    <span><i class="fas fa-exclamation-triangle"></i> Clear Admission Remaining Due:
+                                        <strong id="admissionDueAmountLabel"
+                                            style="font-family:var(--font-mono); font-size:0.95rem; text-decoration:underline; color:#ffffff; margin-left:0.3rem;">₹0</strong></span>
+                                </label>
+                            </div>
+
+                            <!-- Month selector grid -->
+                            <div class="form-group" style="margin-top:0.8rem;">
+                                <label><i class="fas fa-calendar-check"></i> Select Months (Multiple)</label>
+                                <div class="month-checkbox-grid" id="monthCheckboxGrid">
+                                    <label class="month-checkbox">
+                                        <input type="checkbox" name="payMonths" value="January"
+                                            onchange="updateMultiMonthInfo()">
+                                        <span>Jan</span>
+                                    </label>
+                                    <label class="month-checkbox">
+                                        <input type="checkbox" name="payMonths" value="February"
+                                            onchange="updateMultiMonthInfo()">
+                                        <span>Feb</span>
+                                    </label>
+                                    <label class="month-checkbox">
+                                        <input type="checkbox" name="payMonths" value="March"
+                                            onchange="updateMultiMonthInfo()">
+                                        <span>Mar</span>
+                                    </label>
+                                    <label class="month-checkbox">
+                                        <input type="checkbox" name="payMonths" value="April"
+                                            onchange="updateMultiMonthInfo()">
+                                        <span>Apr</span>
+                                    </label>
+                                    <label class="month-checkbox">
+                                        <input type="checkbox" name="payMonths" value="May"
+                                            onchange="updateMultiMonthInfo()">
+                                        <span>May</span>
+                                    </label>
+                                    <label class="month-checkbox">
+                                        <input type="checkbox" name="payMonths" value="June"
+                                            onchange="updateMultiMonthInfo()">
+                                        <span>Jun</span>
+                                    </label>
+                                    <label class="month-checkbox">
+                                        <input type="checkbox" name="payMonths" value="July"
+                                            onchange="updateMultiMonthInfo()">
+                                        <span>Jul</span>
+                                    </label>
+                                    <label class="month-checkbox">
+                                        <input type="checkbox" name="payMonths" value="August"
+                                            onchange="updateMultiMonthInfo()">
+                                        <span>Aug</span>
+                                    </label>
+                                    <label class="month-checkbox">
+                                        <input type="checkbox" name="payMonths" value="September"
+                                            onchange="updateMultiMonthInfo()">
+                                        <span>Sep</span>
+                                    </label>
+                                    <label class="month-checkbox">
+                                        <input type="checkbox" name="payMonths" value="October"
+                                            onchange="updateMultiMonthInfo()">
+                                        <span>Oct</span>
+                                    </label>
+                                    <label class="month-checkbox">
+                                        <input type="checkbox" name="payMonths" value="November"
+                                            onchange="updateMultiMonthInfo()">
+                                        <span>Nov</span>
+                                    </label>
+                                    <label class="month-checkbox">
+                                        <input type="checkbox" name="payMonths" value="December"
+                                            onchange="updateMultiMonthInfo()">
+                                        <span>Dec</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Payment info bar -->
+                            <div class="payment-info-bar">
+                                <div class="payment-info-item">
+                                    <span>Per Month Fee</span>
+                                    <strong id="payInfoMonthly">₹0</strong>
+                                </div>
+                                <div class="payment-info-item">
+                                    <span>Months Selected</span>
+                                    <strong id="payInfoMonthCount">0</strong>
+                                </div>
+                                <div class="payment-info-item">
+                                    <span>Total Fee</span>
+                                    <strong id="payInfoTotalFee">₹0</strong>
+                                </div>
+                                <div class="payment-info-item">
+                                    <span>Amount Paying</span>
+                                    <strong id="payInfoPaying">₹0</strong>
+                                </div>
+                                <div class="payment-info-item due-highlight">
+                                    <span>Already Paid Months</span>
+                                    <strong id="payInfoAlreadyPaid">—</strong>
+                                </div>
+                            </div>
+
+                            <button class="btn-primary btn-pay" onclick="processPayment()">
+                                <i class="fas fa-check-circle"></i> Process Payment
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Payment History -->
+                    <div class="payment-history-card">
+                        <div class="form-card-header">
+                            <i class="fas fa-history"></i>
+                            <h3>Payment History &amp; Dues</h3>
+                        </div>
+                        <div class="table-container">
+                            <table class="payment-table" id="paymentHistoryTable">
+                                <thead>
+                                    <tr>
+                                        <th>Month</th>
+                                        <th>Year</th>
+                                        <th>Total Fee</th>
+                                        <th>Paid</th>
+                                        <th>Due</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="paymentHistoryBody">
+                                    <tr>
+                                        <td colspan="6" class="empty-row">No payment records found</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- No Results -->
+            <div id="noResults" class="no-results" style="display:none;">
+                <div class="no-results-icon">
+                    <i class="fas fa-user-slash"></i>
+                </div>
+                <h3>Student Not Found</h3>
+                <p>No student record found with this ID. Please check the ID and try again.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- ── TOAST CONTAINER ─────────────────────────────────── -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- ── SUCCESS / INFO MODAL ────────────────────────────── -->
+    <div class="modal-overlay" id="modalOverlay" style="display:none;">
+        <div class="modal-card" id="modalCard">
+            <div class="modal-icon" id="modalIcon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3 id="modalTitle">Success!</h3>
+            <p id="modalMessage">Operation completed successfully.</p>
+            <div class="modal-fee-breakdown" id="modalFeeBreakdown" style="display:none;"></div>
+            <button class="btn-primary" onclick="closeModal()">
+                <i class="fas fa-thumbs-up"></i> Got it
+            </button>
+        </div>
+    </div>
+
+    <!-- ── AUTH OVERLAY (Login & Sign Up) ─────────────────── -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-card">
+
+            <!-- Curved Teal Banner Header (with School Next Pro Brand) -->
+            <div class="auth-banner-header">
+                <div class="auth-brand-badge">
+                    <i class="fas fa-graduation-cap"></i> School Next <span>Pro</span>
+                </div>
+                <h2 id="authBannerTitle">LOGIN YOUR SCHOOL</h2>
+            </div>
+
+            <!-- Auth Tabs (Login / Sign Up) -->
+            <div class="auth-tabs">
+                <button class="auth-tab-btn active" id="tabAuthLogin" onclick="switchAuthTab('login')">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <button class="auth-tab-btn" id="tabAuthSignup" onclick="switchAuthTab('signup')">
+                    <i class="fas fa-user-plus"></i> Register
+                </button>
+            </div>
+
+            <!-- LOGIN FORM (Line Input Style matching image) -->
+            <form id="loginForm" class="auth-form login-image-style" onsubmit="return handleLogin(event)">
+
+                <div class="line-input-group full-width">
+                    <i class="fas fa-hashtag line-input-icon"></i>
+                    <input type="text" id="loginSchoolCode" placeholder="School Code (e.g. SCH001)" required
+                        autocomplete="off">
+                </div>
+
+                <div class="line-input-group full-width">
+                    <i class="fas fa-lock line-input-icon"></i>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                </div>
+
+                <!-- Options Row (Remember me & Forgot Password) -->
+                <div class="auth-options-row full-width">
+                    <label class="remember-me-label">
+                        <input type="checkbox" id="loginRememberMe" checked>
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" onclick="openForgotPasswordModal(event)" class="forgot-link">Forgot Password?</a>
+                </div>
+
+                <!-- Teal Login Button -->
+                <button type="submit" class="btn-primary btn-submit full-width login-image-btn">
+                    LOGIN
+                </button>
+
+                <p class="auth-register-text full-width">
+                    Don't have an account? <a href="#" onclick="switchAuthTab('signup'); return false;">Register
+                        School</a>
+                </p>
+            </form>
+
+            <!-- SIGN UP FORM -->
+            <form id="signupForm" class="auth-form" onsubmit="return handleSignup(event)" style="display:none;">
+                <!-- Logo Upload -->
+                <div class="form-group full-width profile-upload-group">
+                    <label><i class="fas fa-camera"></i> School Logo</label>
+                    <div class="profile-upload-wrapper">
+                        <div class="profile-preview-box" id="signupLogoPreview">
+                            <i class="fas fa-school"></i>
+                        </div>
+                        <div class="profile-upload-controls">
+                            <input type="file" id="signupLogoInput" accept="image/*"
+                                onchange="handlePhotoUpload(event, 'signupLogoPreview', 'signupLogoData')"
+                                style="display:none;">
+                            <button type="button" class="btn-upload-photo"
+                                onclick="document.getElementById('signupLogoInput').click()">
+                                <i class="fas fa-upload"></i> Upload School Logo
+                            </button>
+                            <button type="button" class="btn-remove-photo" id="btnRemoveSignupLogo"
+                                onclick="removeUploadedPhoto('signupLogoPreview', 'signupLogoData')"
+                                style="display:none;">
+                                <i class="fas fa-trash"></i> Remove
+                            </button>
+                            <input type="hidden" id="signupLogoData" value="">
+                            <small class="upload-hint">Upload official school logo (PNG, JPG, WEBP)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="signupSchoolName"><i class="fas fa-university"></i> School Name</label>
+                    <input type="text" id="signupSchoolName" placeholder="e.g. Delhi Public School" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupSchoolCode"><i class="fas fa-hashtag"></i> School Code</label>
+                    <input type="text" id="signupSchoolCode" placeholder="e.g. SCH001" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupSchoolEmail"><i class="fas fa-envelope"></i> School Email</label>
+                    <input type="email" id="signupSchoolEmail" placeholder="school@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupOwnerNumber"><i class="fas fa-phone"></i> Owner Number</label>
+                    <input type="tel" id="signupOwnerNumber" placeholder="10-digit mobile number" pattern="[0-9]{10}"
+                        maxlength="10" required>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create Password" minlength="4" required>
+                </div>
+                <button type="submit" class="btn-primary btn-submit full-width">
+                    <i class="fas fa-user-plus"></i> Register School &amp; Create Account
+                </button>
+                <p class="auth-switch-text full-width">
+                    Already registered? <a href="#" onclick="switchAuthTab('login'); return false;">Login here</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         WELCOME SPLASH OVERLAY
+    ══════════════════════════════════════════════════════ -->
+    <div class="welcome-overlay" id="welcomeOverlay" style="display:none;">
+        <div class="welcome-card" id="welcomeCard">
+            <div class="welcome-logos">
+                <div class="welcome-logo-icon" id="welcomeSystemLogo">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="welcome-logo-divider"><i class="fas fa-bolt"></i></div>
+                <div class="welcome-logo-icon school-logo" id="welcomeSchoolLogo">
+                    <i class="fas fa-school"></i>
+                </div>
+            </div>
+            <div class="welcome-badge" id="welcomeSchoolBadge">School Code: SCH001</div>
+            <h1 class="welcome-title">Welcome to <span class="highlight">School Next Pro</span></h1>
+            <h3 class="welcome-school-name" id="welcomeSchoolName">School Management System</h3>
+            <p class="welcome-text" id="welcomeText">
+                Welcome to School Next! We are here to help and manage your fee system.
+            </p>
+            <div class="welcome-action">
+                <button class="btn-primary btn-welcome-start" onclick="closeWelcomeSplash()">
+                    <i class="fas fa-rocket"></i> Launch Dashboard
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         PRINTABLE FEE RECEIPT OVERLAY
+    ══════════════════════════════════════════════════════ -->
+    <div class="receipt-overlay" id="receiptOverlay" style="display:none;">
+        <div class="receipt-modal-card">
+
+            <!-- Printable Area -->
+            <div class="receipt-card" id="printableReceiptArea">
+
+                <!-- School Header -->
+                <div class="receipt-header">
+                    <div class="receipt-school-logo" id="receiptSchoolLogo">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <div class="receipt-school-info">
+                        <h2 id="receiptSchoolName">School Next Pro</h2>
+                        <p id="receiptSchoolSub">School Code: SCH001 | Official Fee Receipt</p>
+                        <small id="receiptSchoolContact">Email: info@school.com | Contact: 9876543210</small>
+                    </div>
+                </div>
+
+                <div class="receipt-divider"></div>
+
+                <!-- Receipt Meta -->
+                <div class="receipt-meta">
+                    <div>
+                        <span class="receipt-tag"><i class="fas fa-file-invoice"></i> FEE RECEIPT</span>
+                        <small id="receiptDate">Date: 27/07/2026</small>
+                    </div>
+                    <div class="receipt-no" id="receiptNo">Receipt No: REC-2026-1001</div>
+                </div>
+
+                <!-- Student Details -->
+                <div class="receipt-student-grid">
+                    <div class="receipt-info-item">
+                        <span>Student ID:</span>
+                        <strong id="receiptStudentId">—</strong>
+                    </div>
+                    <div class="receipt-info-item">
+                        <span>Student Name:</span>
+                        <strong id="receiptStudentName">—</strong>
+                    </div>
+                    <div class="receipt-info-item">
+                        <span>Father's Name:</span>
+                        <strong id="receiptFatherName">—</strong>
+                    </div>
+                    <div class="receipt-info-item">
+                        <span>Class &amp; Section:</span>
+                        <strong id="receiptClassSection">—</strong>
+                    </div>
+                    <div class="receipt-info-item">
+                        <span>Bus Number:</span>
+                        <strong id="receiptBusNumber">—</strong>
+                    </div>
+                    <div class="receipt-info-item">
+                        <span>Admission Month:</span>
+                        <strong id="receiptAdmissionMonth">—</strong>
+                    </div>
+                </div>
+
+                <!-- Monthly Fee Structure -->
+                <div
+                    style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:0.6rem 0.85rem;margin-bottom:1rem;font-size:0.85rem;display:flex;justify-content:space-between;">
+                    <span>Tuition Fee: <strong id="receiptTuitionFee">₹0</strong> | Bus Fee: <strong
+                            id="receiptBusFee">₹0</strong></span>
+                    <span>Total Monthly Fee: <strong id="receiptMonthlyTotal" style="color:#6366f1;">₹0</strong></span>
+                </div>
+
+                <!-- Month-wise Breakdown Table -->
+                <div style="font-weight:700;font-size:0.85rem;margin-bottom:0.4rem;color:#0f172a;">
+                    <i class="fas fa-list-alt"></i> Month-wise Payment &amp; Due Breakdown
+                </div>
+                <table class="receipt-table">
+                    <thead>
+                        <tr>
+                            <th>Month / Particular</th>
+                            <th style="text-align:right;">Total Fee</th>
+                            <th style="text-align:right;">Paid</th>
+                            <th style="text-align:right;">Due Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody id="receiptMonthBreakdownBody">
+                        <!-- Dynamically filled in JS -->
+                    </tbody>
+                </table>
+
+                <!-- Summary Box -->
+                <div class="receipt-summary-box">
+                    <div class="summary-row">
+                        <span>Total Gross Fees (Admission + Monthly):</span>
+                        <strong id="receiptGrossTotal">₹0</strong>
+                    </div>
+                    <div class="summary-row" style="color:#059669;">
+                        <span>Total Amount Paid (-):</span>
+                        <strong id="receiptTotalPaidSum">- ₹0</strong>
+                    </div>
+                    <div class="summary-row due-row">
+                        <span>Net Remaining Due Balance (=):</span>
+                        <strong id="receiptNetDueBalance">₹0</strong>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="receipt-footer">
+                    <div class="footer-sign">
+                        <div class="sign-line"></div>
+                        <small>Authorized Signatory / Accountant</small>
+                    </div>
+                    <small class="computer-gen">This is an official computer generated receipt from School Next
+                        Pro.</small>
+                </div>
+            </div>
+
+            <!-- Action Buttons (hidden when printing) -->
+            <div class="receipt-actions no-print">
+                <button class="btn-primary btn-pdf-now" onclick="downloadReceiptPDF()">
+                    <i class="fas fa-file-pdf"></i> Save / Download PDF
+                </button>
+                <button class="btn-print-now" onclick="printReceiptWindow()">
+                    <i class="fas fa-print"></i> Print Receipt
+                </button>
+                <button class="btn-cancel" onclick="closeReceiptModal()">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── EDIT SCHOOL PROFILE MODAL (LOGO ONLY) ───────────── -->
+    <div class="modal-overlay" id="editSchoolOverlay" style="display:none;">
+        <div class="modal-card" style="max-width:520px; text-align:left;">
+            <div
+                style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.2rem; padding-bottom:0.75rem; border-bottom:1px solid var(--border);">
+                <h3
+                    style="font-family:var(--font-display); font-size:1.3rem; margin:0; display:flex; align-items:center; gap:0.6rem; color:var(--text-primary);">
+                    <i class="fas fa-camera" style="color:var(--color-cyan);"></i> Update School Logo
+                </h3>
+                <button type="button" class="btn-cancel" onclick="closeEditSchoolModal()"
+                    style="padding:0.35rem 0.7rem; font-size:0.8rem;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <form id="editSchoolForm" onsubmit="return handleUpdateSchool(event)"
+                style="display:flex; flex-direction:column; gap:1.1rem;">
+
+                <!-- School Logo Upload & Preview -->
+                <div class="profile-upload-wrapper">
+                    <div class="profile-preview-box" id="editSchoolLogoPreview">
+                        <i class="fas fa-university"></i>
+                    </div>
+                    <div class="profile-upload-controls">
+                        <label class="btn-upload-photo" for="editSchoolLogoInput">
+                            <i class="fas fa-camera"></i> Change School Logo
+                        </label>
+                        <input type="file" id="editSchoolLogoInput" accept="image/*" style="display:none;"
+                            onchange="handlePhotoUpload(event, 'editSchoolLogoPreview', 'editSchoolLogoData')">
+                        <button type="button" class="btn-remove-photo"
+                            onclick="removeUploadedPhoto('editSchoolLogoPreview', 'editSchoolLogoData')">
+                            <i class="fas fa-trash"></i> Remove Logo
+                        </button>
+                        <input type="hidden" id="editSchoolLogoData" value="">
+                        <span class="upload-hint">Upload official PNG, JPG or WEBP school logo</span>
+                    </div>
+                </div>
+
+                <!-- Readonly School Info Overview -->
+                <div
+                    style="background:rgba(15, 23, 42, 0.7); border:1px solid var(--border); border-radius:var(--radius-md); padding:1rem; display:grid; grid-template-columns: repeat(2, 1fr); gap:0.8rem;">
+                    <div>
+                        <small
+                            style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.8px;">School
+                            Code</small>
+                        <p id="editSchoolCodeDisplay"
+                            style="font-family:var(--font-mono); font-weight:700; color:var(--color-cyan); margin-top:0.1rem; font-size:0.9rem;">
+                            SCH001</p>
+                    </div>
+                    <div>
+                        <small
+                            style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.8px;">School
+                            Name</small>
+                        <p id="editSchoolNameDisplay"
+                            style="font-weight:700; color:var(--text-primary); margin-top:0.1rem; font-size:0.88rem;">—
+                        </p>
+                    </div>
+                    <div>
+                        <small
+                            style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.8px;">Official
+                            Email</small>
+                        <p id="editSchoolEmailDisplay"
+                            style="font-size:0.82rem; color:var(--text-secondary); margin-top:0.1rem;">—</p>
+                    </div>
+                    <div>
+                        <small
+                            style="font-size:0.68rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.8px;">Contact
+                            Phone</small>
+                        <p id="editSchoolPhoneDisplay"
+                            style="font-size:0.82rem; color:var(--text-secondary); margin-top:0.1rem;">—</p>
+                    </div>
+                </div>
+
+                <!-- Security Note for Password/Email/Phone updates -->
+                <div
+                    style="background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.25); border-radius:var(--radius-sm); padding:0.65rem 0.85rem; font-size:0.78rem; color:var(--color-amber); line-height:1.5;">
+                    <i class="fas fa-shield-alt"></i> <strong>Security Rule:</strong> Password, Email, or Mobile Number
+                    can only be updated using <strong>Forgot Password (OTP Verification)</strong> on the Login screen.
+                </div>
+
+                <!-- Buttons -->
+                <div
+                    style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:0.2rem; padding-top:1rem; border-top:1px solid var(--border);">
+                    <button type="button" class="btn-cancel" onclick="closeEditSchoolModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-save"></i> Update School Logo
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ── FORGOT PASSWORD / ACCOUNT RECOVERY MODAL (OTP) ─────── -->
+    <div class="modal-overlay" id="forgotPasswordOverlay" style="display:none;">
+        <div class="modal-card" style="max-width:480px; text-align:left;">
+            <div
+                style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.2rem; padding-bottom:0.75rem; border-bottom:1px solid var(--border);">
+                <h3
+                    style="font-family:var(--font-display); font-size:1.25rem; margin:0; display:flex; align-items:center; gap:0.6rem; color:var(--text-primary);">
+                    <i class="fas fa-key" style="color:var(--color-amber);"></i> Account Recovery &amp; OTP Reset
+                </h3>
+                <button type="button" class="btn-cancel" onclick="closeForgotPasswordModal()"
+                    style="padding:0.35rem 0.7rem; font-size:0.8rem;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- STEP 1: Enter Mobile / School Code -->
+            <div id="recoveryStep1">
+                <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:1.2rem; line-height:1.5;">
+                    Enter your registered <strong>10-digit Mobile Number</strong> or <strong>School Code</strong> to
+                    receive a 6-digit verification OTP.
+                </p>
+                <div class="form-group" style="margin-bottom:1rem;">
+                    <label><i class="fas fa-mobile-alt"></i> Registered Mobile / School Code</label>
+                    <input type="text" id="recoveryPhoneInput"
+                        placeholder="Enter 10-digit Mobile or School Code (e.g. SCH001)" required>
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:1.2rem;">
+                    <button type="button" class="btn-cancel" onclick="closeForgotPasswordModal()">Cancel</button>
+                    <button type="button" class="btn-primary" onclick="sendRecoveryOTP()">
+                        <i class="fas fa-paper-plane"></i> Send OTP Code
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 2: Verify OTP -->
+            <div id="recoveryStep2" style="display:none;">
+                <p style="font-size:0.88rem; color:var(--text-secondary); margin-bottom:0.8rem; line-height:1.5;">
+                    We have sent a 6-digit OTP code to registered mobile <strong id="otpSentPhoneTarget"
+                        style="color:var(--color-cyan);">—</strong>.
+                </p>
+                <div
+                    style="background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); border-radius:var(--radius-sm); padding:0.65rem 0.9rem; margin-bottom:1.2rem; font-size:0.8rem; color:var(--color-amber);">
+                    <i class="fas fa-sms"></i> Demo Verification Code: <strong id="demoOtpDisplay"
+                        style="font-family:var(--font-mono); font-size:1.05rem; text-decoration:underline; color:#ffffff; margin-left:0.3rem;">------</strong>
+                </div>
+                <div class="form-group" style="margin-bottom:1rem;">
+                    <label><i class="fas fa-shield-alt"></i> Enter 6-Digit OTP</label>
+                    <input type="text" id="recoveryOtpInput" maxlength="6" placeholder="Enter 6-digit OTP"
+                        style="font-family:var(--font-mono); font-size:1.2rem; letter-spacing:5px; text-align:center; color:var(--color-cyan);"
+                        required>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.2rem;">
+                    <a href="#" onclick="sendRecoveryOTP(); return false;"
+                        style="font-size:0.8rem; color:var(--color-cyan); font-weight:700; text-decoration:none;"><i
+                            class="fas fa-sync-alt"></i> Resend OTP</a>
+                    <div style="display:flex; gap:0.6rem;">
+                        <button type="button" class="btn-cancel" onclick="backToRecoveryStep1()">Back</button>
+                        <button type="button" class="btn-primary" onclick="verifyRecoveryOTP()">
+                            <i class="fas fa-check-circle"></i> Verify OTP
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 3: Reset Password & Credentials -->
+            <div id="recoveryStep3" style="display:none;">
+                <div
+                    style="background:rgba(16,185,129,0.12); border:1px solid rgba(16,185,129,0.3); border-radius:var(--radius-sm); padding:0.6rem 0.9rem; margin-bottom:1.2rem; font-size:0.82rem; color:var(--emerald);">
+                    <i class="fas fa-check-circle"></i> OTP Verified Successfully! Update your password, email, or
+                    mobile number below:
+                </div>
+                <form id="resetPasswordForm" onsubmit="return handleResetPasswordAndDetails(event)"
+                    style="display:flex; flex-direction:column; gap:1rem;">
+
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> New Account Password</label>
+                        <input type="password" id="resetNewPassword" placeholder="Enter new password (min 4 chars)"
+                            minlength="4" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Update School Email</label>
+                        <input type="email" id="resetNewEmail" placeholder="Enter official school email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Update Mobile Number</label>
+                        <input type="tel" id="resetNewPhone" placeholder="Enter 10-digit mobile number"
+                            pattern="[0-9]{10}" maxlength="10" required>
+                    </div>
+
+                    <div
+                        style="display:flex; justify-content:flex-end; gap:0.75rem; margin-top:0.5rem; padding-top:1rem; border-top:1px solid var(--border);">
+                        <button type="button" class="btn-cancel" onclick="closeForgotPasswordModal()">Cancel</button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-key"></i> Update Credentials &amp; Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
