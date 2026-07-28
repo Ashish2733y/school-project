@@ -1502,6 +1502,53 @@ html.light-mode .student-name {
     color: #0f172a !important;
 }
 
+html.light-mode .modal-overlay,
+html.light-mode .auth-overlay,
+html.light-mode .welcome-overlay {
+    background: rgba(244, 241, 234, 0.88) !important;
+    backdrop-filter: blur(12px) !important;
+}
+
+html.light-mode .modal-card,
+html.light-mode .welcome-card {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.15) !important;
+    color: #0f172a !important;
+}
+
+html.light-mode .modal-card h3,
+html.light-mode .welcome-title {
+    color: #0f172a !important;
+}
+
+html.light-mode .modal-card p,
+html.light-mode .welcome-school-name,
+html.light-mode .welcome-text {
+    color: #475569 !important;
+}
+
+html.light-mode .modal-fee-breakdown {
+    background: #f8f6f0 !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+}
+
+html.light-mode .toast {
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12) !important;
+    color: #0f172a !important;
+}
+
+html.light-mode .toast-title {
+    color: #0f172a !important;
+}
+
+html.light-mode .toast-message {
+    color: #475569 !important;
+}
+
 html.light-mode .student-due {
     color: #d97706 !important;
 }
