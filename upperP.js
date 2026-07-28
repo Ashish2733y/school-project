@@ -168,6 +168,23 @@ document.addEventListener('DOMContentLoaded', () => {
     checkAuthStatus();
 });
 
+// ============ MOBILE HEADER MENU TOGGLE ============
+function toggleMobileHeaderMenu() {
+    const stats = document.getElementById('headerStats');
+    if (stats) {
+        stats.classList.toggle('mobile-active');
+    }
+}
+
+// Close mobile dropdown when clicking outside
+document.addEventListener('click', (e) => {
+    const stats = document.getElementById('headerStats');
+    const btn = document.getElementById('mobileMenuBtn');
+    if (stats && btn && !stats.contains(e.target) && !btn.contains(e.target)) {
+        stats.classList.remove('mobile-active');
+    }
+});
+
 // ============ PARTICLE BACKGROUND (ZERO-LAG 120FPS) ============
 function createParticles() {
     const container = document.getElementById('particles');

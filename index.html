@@ -74,7 +74,11 @@
             </div>
 
             <!-- Stats & Actions -->
-            <div class="header-stats">
+            <button class="mobile-menu-btn" id="mobileMenuBtn" onclick="toggleMobileHeaderMenu()" aria-label="Toggle Navigation Menu">
+                <i class="fas fa-ellipsis-v"></i>
+            </button>
+
+            <div class="header-stats" id="headerStats">
                 <!-- Edit School Pill -->
                 <div class="stat-pill edit-school-pill" id="editSchoolPill" onclick="openEditSchoolModal()"
                     title="Edit School Profile, Logo & Password">

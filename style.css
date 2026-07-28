@@ -349,6 +349,7 @@ body {
 }
 
 /* Header stats */
+.mobile-menu-btn { display: none; }
 .header-stats { display: flex; gap: 0.55rem; align-items: center; position: relative; }
 .stat-pill {
     display: flex; align-items: center; gap: 0.45rem;
@@ -1570,17 +1571,61 @@ body {
     }
     .header-inner { 
         padding: 0.6rem 0.8rem; 
-        flex-wrap: wrap; 
-        gap: 0.5rem; 
-        justify-content: space-between; 
+        flex-wrap: nowrap; 
+        justify-content: space-between;
+        align-items: center; 
+        position: relative;
     }
-    .main-container { padding: 0.75rem 0.5rem; }
+    .mobile-menu-btn {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        background: rgba(0, 240, 255, 0.1);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        color: var(--color-cyan);
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all var(--t-fast);
+        z-index: 101;
+    }
+    .mobile-menu-btn:hover {
+        background: rgba(0, 240, 255, 0.2);
+        box-shadow: var(--glow-cyan);
+    }
+    .header-stats {
+        display: none;
+        position: absolute;
+        top: calc(100% + 0.5rem);
+        right: 0.8rem;
+        background: rgba(11, 15, 25, 0.98);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-xl), var(--glow-multi);
+        padding: 0.8rem;
+        flex-direction: column;
+        gap: 0.6rem;
+        z-index: 999;
+        backdrop-filter: blur(20px);
+        min-width: 200px;
+    }
+    .header-stats.mobile-active {
+        display: flex !important;
+        animation: dropDown 0.2s ease-out;
+    }
+    .header-stats .stat-pill {
+        width: 100%;
+        justify-content: flex-start;
+    }
+    .main-container { padding: 0.75rem 0.5rem; width: 100%; max-width: 100vw; }
     .form-grid { grid-template-columns: 1fr; gap: 0.75rem; }
     .form-group.full-width { grid-column: 1; }
     .fee-summary-grid { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
     .month-checkbox-grid { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
     .logo-text p { display: none; }
-    .logo-text h1 { font-size: 1.1rem; }
+    .logo-text h1 { font-size: 1.05rem; }
     .profile-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
     .profile-actions { margin-left: 0; width: 100%; flex-wrap: wrap; }
     .receipt-student-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
