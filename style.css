@@ -1394,11 +1394,70 @@ html.light-mode .student-profile-card,
 html.light-mode .summary-card,
 html.light-mode .stat-card,
 html.light-mode .content-section,
-html.light-mode .tab-container {
+html.light-mode .tab-container,
+html.light-mode .fee-payment-card,
+html.light-mode .payment-history-card,
+html.light-mode .student-dropdown {
     background: #ffffff !important;
-    border: 1px solid #e2e8f0 !important;
+    border: 1px solid #cbd5e1 !important;
     box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
     color: #0f172a !important;
+}
+
+html.light-mode .month-checkbox span {
+    background: #f4f1ea !important;
+    color: #1e293b !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+html.light-mode .month-checkbox span:hover {
+    background: #e2e8f0 !important;
+    border-color: #0284c7 !important;
+    color: #0284c7 !important;
+}
+
+html.light-mode .month-checkbox input:checked + span {
+    background: #0284c7 !important;
+    color: #ffffff !important;
+    border-color: #0284c7 !important;
+}
+
+html.light-mode .payment-info-bar {
+    background: #fdfbf7 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+html.light-mode .payment-info-item span {
+    color: #475569 !important;
+}
+
+html.light-mode .payment-info-item strong {
+    color: #0f172a !important;
+}
+
+html.light-mode .payment-table thead tr {
+    background: #f1ebd9 !important;
+    border-bottom: 2px solid #cbd5e1 !important;
+}
+
+html.light-mode .student-dropdown-item {
+    border-bottom-color: #e2e8f0 !important;
+}
+
+html.light-mode .student-dropdown-item:hover {
+    background: #f8f6f0 !important;
+}
+
+html.light-mode .student-id {
+    color: #0284c7 !important;
+}
+
+html.light-mode .student-name {
+    color: #0f172a !important;
+}
+
+html.light-mode .student-due {
+    color: #d97706 !important;
 }
 
 html.light-mode .form-card-header {
