@@ -52,23 +52,43 @@ app.use(express.json({ limit: '10mb' }));
 // Serve frontend static files (index.html, style.css, upperP.js)
 app.use(express.static(__dirname));
 
-// ─── Neon PostgreSQL Connection Pool ────────────────────────────────────────
-if (!process.env.DATABASE_URL) {
-    console.error('❌ FATAL: DATABASE_URL environment variable is not set. ' +
-                  'Copy .env.example to .env and fill in your Neon credentials.');
-    process.exit(1);
+// ─── Neon PostgreSQL Connection Pool ─────────────────────────────────────────
+// Pool is created lazily so the serverless function doesn't crash at import time
+// if DATABASE_URL is missing (Vercel env vars may not be set yet).
+let _pool = null;
+
+function getPool() {
+    if (!process.env.DATABASE_URL) {
+        return null; // caller must handle null → 503
+    }
+    if (!_pool) {
+        _pool = new Pool({
+            connectionString: process.env.DATABASE_URL,
+            ssl: { rejectUnauthorized: false },
+            max: 10,
+            idleTimeoutMillis: 30000,
+            connectionTimeoutMillis: 5000
+        });
+    }
+    return _pool;
 }
 
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false },
-    max: 10,               // max pool size
-    idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 5000
+// Convenience alias used throughout the file
+const pool = new Proxy({}, {
+    get(_, prop) {
+        const p = getPool();
+        if (!p) throw new Error('DATABASE_URL is not configured. Set it in Vercel Environment Variables.');
+        return p[prop].bind(p);
+    }
 });
 
 // ─── DB Initialisation ───────────────────────────────────────────────────────
 async function initDatabase() {
+    const pool = getPool();
+    if (!pool) {
+        console.warn('⚠️  DATABASE_URL not set — skipping table initialization.');
+        return;
+    }
     try {
         console.log('🔄 Connecting to Neon PostgreSQL and initializing tables...');
 
@@ -166,6 +186,8 @@ async function initDatabase() {
 // ─── Helper: Ensure School Record Exists (prevents FK violations) ────────────
 async function ensureSchoolExists(schoolCode) {
     if (!schoolCode) return;
+    const pool = getPool();
+    if (!pool) return;
     try {
         const existing = await pool.query(
             'SELECT school_code FROM schools WHERE school_code = $1',
@@ -581,9 +603,8 @@ if (require.main === module) {
         console.log(`🚀 School Next Pro API running on http://localhost:${PORT}`);
         await initDatabase();
     });
-} else {
-    // When imported by Vercel, run DB init once without blocking the export
-    initDatabase().catch(err =>
-        console.error('DB init error in serverless context:', err.message)
-    );
 }
+// NOTE: When imported by Vercel as a serverless function, we do NOT call
+// initDatabase() at module load time. Tables are created lazily on the
+// first /api/auth/register or /api/students request. This prevents the
+// function from crashing at cold-start if DATABASE_URL is briefly unavailable.
