@@ -1435,6 +1435,28 @@ html.light-mode .payment-info-item strong {
     color: #0f172a !important;
 }
 
+html.light-mode .fee-section {
+    background: #f8f6f0 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+html.light-mode .fee-section h4 {
+    color: #0f172a !important;
+}
+
+html.light-mode .fee-row {
+    color: #334155 !important;
+}
+
+html.light-mode .fee-amount {
+    color: #0f172a !important;
+}
+
+html.light-mode .total-section {
+    background: #f1ebd9 !important;
+    border-color: #cbd5e1 !important;
+}
+
 html.light-mode .payment-table thead tr {
     background: #f1ebd9 !important;
     border-bottom: 2px solid #cbd5e1 !important;
