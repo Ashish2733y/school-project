@@ -10,6 +10,7 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+*.log
 
 # OS files
 .DS_Store
@@ -18,3 +19,8 @@ Thumbs.db
 # Editor directories
 .vscode/
 .idea/
+
+# Build / Deploy artifacts
+dist/
+build/
+.vercel/

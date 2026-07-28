@@ -5,9 +5,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>School Next Pro — Student Fee Management System</title>
+
+    <!-- Primary Meta Tags -->
     <meta name="description"
         content="School Next Pro - A comprehensive student fee management system for schools. Manage admissions, track fees, and handle payments efficiently.">
+    <meta name="keywords" content="school fee management, student fees, school admission, fee tracking, school software, fee receipt">
+    <meta name="author" content="School Next Pro">
     <meta name="theme-color" content="#008b8b">
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Canonical URL (update with your actual Vercel domain before deploying) -->
+    <link rel="canonical" href="https://school-next-pro.vercel.app/">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://school-next-pro.vercel.app/">
+    <meta property="og:title" content="School Next Pro — Student Fee Management System">
+    <meta property="og:description" content="A comprehensive student fee management system for schools. Manage admissions, track fees, and handle payments efficiently.">
+    <meta property="og:site_name" content="School Next Pro">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="School Next Pro — Student Fee Management System">
+    <meta name="twitter:description" content="A comprehensive student fee management system for schools. Manage admissions, track fees, and handle payments efficiently.">
 
     <!-- Fonts: Inter (body) + Playfair Display (headings) + JetBrains Mono (numbers) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +37,9 @@
         rel="stylesheet">
 
     <!-- Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+          crossorigin="anonymous" referrerpolicy="no-referrer">
 
     <!-- Styles -->
     <link rel="stylesheet" href="style.css">
@@ -25,8 +47,8 @@
     <!-- PDF Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <!-- App Logic (must be deferred so DOM is ready) -->
-    <script src="upperP.js"></script>
+    <!-- App Logic (deferred so DOM is fully ready before execution) -->
+    <script src="upperP.js" defer></script>
 </head>
 
 <body>
@@ -58,30 +80,38 @@
                 </div>
 
                 <!-- Students pill -->
-                <div class="stat-pill" id="totalStudentsPill" onclick="toggleStudentList()">
-                    <i class="fas fa-users"></i>
+                <div class="stat-pill" id="totalStudentsPill" onclick="toggleStudentList()"
+                    aria-label="View all students" role="button" tabindex="0"
+                    onkeydown="if(event.key==='Enter'||event.key===' ')toggleStudentList()">
+                    <i class="fas fa-users" aria-hidden="true"></i>
                     <span id="totalStudentsCount">0</span>&nbsp;Students
                 </div>
                 <div class="student-dropdown" id="studentDropdown" style="display:none;"></div>
 
                 <!-- Dues pill -->
-                <div class="stat-pill" id="totalDuePill" onclick="toggleDueList()">
-                    <i class="fas fa-exclamation-triangle"></i>
+                <div class="stat-pill" id="totalDuePill" onclick="toggleDueList()"
+                    aria-label="View students with dues" role="button" tabindex="0"
+                    onkeydown="if(event.key==='Enter'||event.key===' ')toggleDueList()">
+                    <i class="fas fa-exclamation-triangle" aria-hidden="true"></i>
                     <span id="totalDueCount">0</span>&nbsp;Dues
                 </div>
                 <div class="student-dropdown" id="dueDropdown" style="display:none;"></div>
 
                 <!-- Theme Switcher Pill -->
                 <div class="stat-pill theme-pill" id="themePill" onclick="cycleTheme()"
-                    title="Switch 3-Color Dynamic Palette">
-                    <i class="fas fa-palette"></i>
+                    title="Switch 3-Color Dynamic Palette" aria-label="Switch theme"
+                    role="button" tabindex="0"
+                    onkeydown="if(event.key==='Enter'||event.key===' ')cycleTheme()">
+                    <i class="fas fa-palette" aria-hidden="true"></i>
                     <span id="themeName">⚡ Cyber Neon</span>
                 </div>
 
                 <!-- Logout -->
                 <div class="stat-pill logout-pill" id="logoutPill" onclick="handleLogout()"
-                    title="Logout School Account">
-                    <i class="fas fa-sign-out-alt"></i>
+                    title="Logout School Account" aria-label="Logout from school account"
+                    role="button" tabindex="0"
+                    onkeydown="if(event.key==='Enter'||event.key===' ')handleLogout()">
+                    <i class="fas fa-sign-out-alt" aria-hidden="true"></i>
                     <span>Logout</span>
                 </div>
             </div>
@@ -89,7 +119,7 @@
     </header>
 
     <!-- ── MAIN APP ────────────────────────────────────────── -->
-    <main class="main-container">
+    <main class="main-container" role="main" aria-label="School Next Pro Application">
 
         <!-- Navigation Tabs -->
         <div class="tab-container">

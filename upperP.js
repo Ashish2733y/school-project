@@ -38,6 +38,18 @@ const MONTHS = [
     'July', 'August', 'September', 'October', 'November', 'December'
 ];
 
+// ============ XSS PREVENTION — HTML ESCAPE HELPER ============
+// Always use this before inserting user-supplied strings into innerHTML.
+function escapeHTML(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 // ============ DATA STORE (ISOLATED PER SCHOOL CODE) ============
 let studentsDB = {};
 let currentSearchId = null;
@@ -47,12 +59,15 @@ let schoolAccounts = JSON.parse(localStorage.getItem('schoolnext_accounts') || '
 let activeSchoolCode = localStorage.getItem('schoolnext_active_user') || null;
 
 // ============ REST API BASE URL (SQL BACKEND) ============
+// On Vercel (no explicit port) or when served from port 5000, use relative /api.
+// Otherwise (e.g. live-server on port 5500), point to the local backend.
 const getApiBaseUrl = () => {
-    const host = window.location.hostname || '127.0.0.1';
-    if (window.location.port === '5000') {
+    const { port, hostname, protocol } = window.location;
+    // Vercel / production (port is empty), or served directly from Express (port 5000)
+    if (!port || port === '5000' || hostname !== 'localhost' && hostname !== '127.0.0.1') {
         return '/api';
     }
-    return `http://${host}:5000/api`;
+    return `${protocol}//${hostname}:5000/api`;
 };
 const API_BASE_URL = getApiBaseUrl();
 
@@ -238,16 +253,19 @@ function toggleStudentList() {
     if (students.length === 0) {
         dropdown.innerHTML = '<div class="student-dropdown-item">No students registered yet</div>';
     } else {
-        let html = '';
+    let html = '';
         students.forEach(id => {
             const s = studentsDB[id];
-            html += `<div class="student-dropdown-item" onclick="selectStudentFromDropdown('${id}')" style="cursor:pointer; display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem;">
-                <span class="student-id" style="font-family:var(--font-mono); font-weight:700; color:var(--color-cyan); font-size:0.8rem;">${id}</span>
-                <span class="student-name" style="font-weight:600; color:var(--text-primary); font-size:0.85rem;">${s.name}</span>
+            const safeId   = escapeHTML(id);
+            const safeName = escapeHTML(s.name);
+            const safeMob  = escapeHTML(s.mobile || '—');
+            html += `<div class="student-dropdown-item" onclick="selectStudentFromDropdown('${safeId}')" style="cursor:pointer; display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem;">
+                <span class="student-id" style="font-family:var(--font-mono); font-weight:700; color:var(--color-cyan); font-size:0.8rem;">${safeId}</span>
+                <span class="student-name" style="font-weight:600; color:var(--text-primary); font-size:0.85rem;">${safeName}</span>
                 <span class="student-mobile" style="color:var(--text-muted); font-size:0.75rem; font-family:var(--font-mono); margin-left:auto; margin-right:0.4rem;">
-                    <i class="fas fa-phone-alt" style="font-size:0.7rem; color:var(--color-cyan);"></i> ${s.mobile || '—'}
+                    <i class="fas fa-phone-alt" style="font-size:0.7rem; color:var(--color-cyan);"></i> ${safeMob}
                 </span>
-                <button class="btn-delete-student" onclick="deleteStudent('${id}', event)" title="Delete Student">
+                <button class="btn-delete-student" onclick="deleteStudent('${safeId}', event)" title="Delete Student" aria-label="Delete student ${safeName}">
                     <i class="fas fa-trash-alt"></i> Delete
                 </button>
             </div>`;
@@ -294,16 +312,19 @@ function toggleDueList() {
     if (dueStudents.length === 0) {
         dropdown.innerHTML = '<div class="student-dropdown-item">No dues pending</div>';
     } else {
-        let html = '';
+    let html = '';
         dueStudents.forEach(s => {
-            html += `<div class="student-dropdown-item" onclick="selectStudentFromDropdown('${s.id}')" style="cursor:pointer; display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem;">
-                <span class="student-id" style="font-family:var(--font-mono); font-weight:700; color:var(--color-cyan); font-size:0.8rem;">${s.id}</span>
-                <span class="student-name" style="font-weight:600; color:var(--text-primary); font-size:0.85rem;">${s.name}</span>
+            const safeId   = escapeHTML(s.id);
+            const safeName = escapeHTML(s.name);
+            const safeMob  = escapeHTML(s.mobile || '—');
+            html += `<div class="student-dropdown-item" onclick="selectStudentFromDropdown('${safeId}')" style="cursor:pointer; display:flex; align-items:center; gap:0.6rem; padding:0.6rem 0.85rem;">
+                <span class="student-id" style="font-family:var(--font-mono); font-weight:700; color:var(--color-cyan); font-size:0.8rem;">${safeId}</span>
+                <span class="student-name" style="font-weight:600; color:var(--text-primary); font-size:0.85rem;">${safeName}</span>
                 <span class="student-mobile" style="color:var(--text-muted); font-size:0.75rem; font-family:var(--font-mono); margin-left:auto;">
-                    <i class="fas fa-phone-alt" style="font-size:0.7rem; color:var(--color-cyan);"></i> ${s.mobile || '—'}
+                    <i class="fas fa-phone-alt" style="font-size:0.7rem; color:var(--color-cyan);"></i> ${safeMob}
                 </span>
                 <span class="student-due" style="color:var(--danger); font-weight:700; font-size:0.82rem; font-family:var(--font-mono); margin-left:0.4rem; margin-right:0.4rem;">₹${s.totalDue.toLocaleString('en-IN')}</span>
-                <button class="btn-delete-student" onclick="deleteStudent('${s.id}', event)" title="Delete Student">
+                <button class="btn-delete-student" onclick="deleteStudent('${safeId}', event)" title="Delete Student" aria-label="Delete student ${safeName}">
                     <i class="fas fa-trash-alt"></i> Delete
                 </button>
             </div>`;
@@ -341,16 +362,22 @@ function deleteStudent(id, event) {
     }
 
     const student = studentsDB[id];
-    const confirmDelete = confirm(`Are you sure you want to delete student "${student.name}" (ID: ${id})?\nThis action cannot be undone.`);
+
+    // BUG FIX: Check confirmation BEFORE deleting.
+    // Previous code deleted the student regardless of the user's answer.
+    const confirmDelete = confirm(
+        `Are you sure you want to delete student "${student.name}" (ID: ${id})?\nThis action cannot be undone.`
+    );
+    if (!confirmDelete) return; // User cancelled — do nothing
 
     delete studentsDB[id];
     saveData();
     updateHeaderStats();
 
     // Async sync delete with SQL server
-    fetch(`${API_BASE_URL}/students/${activeSchoolCode}/${id}`, {
+    fetch(`${API_BASE_URL}/students/${activeSchoolCode}/${encodeURIComponent(id)}`, {
         method: 'DELETE'
-    }).catch(err => {});
+    }).catch(() => { /* Network error — local state already updated */ });
 
     // Refresh dropdowns if open
     const studentDropdown = document.getElementById('studentDropdown');
@@ -376,7 +403,8 @@ function deleteStudent(id, event) {
         if (searchInput) searchInput.value = '';
     }
 
-    showToast('error', 'Student Deleted', `Student "${student.name}" (${id}) has been deleted successfully.`);
+    showToast('error', 'Student Deleted',
+        `Student "${escapeHTML(student.name)}" (${escapeHTML(id)}) has been deleted successfully.`);
 }
 
 // Close dropdowns when clicking outside
@@ -1300,13 +1328,14 @@ function showToast(type, title, message) {
 
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
+    // Use escapeHTML for user-supplied content to prevent XSS
     toast.innerHTML = `
         <div class="toast-icon">
             <i class="${icons[type] || icons.info}"></i>
         </div>
         <div class="toast-content">
-            <strong>${title}</strong>
-            <p>${message}</p>
+            <strong>${escapeHTML(title)}</strong>
+            <p>${escapeHTML(message)}</p>
         </div>
     `;
 
