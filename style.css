@@ -1422,6 +1422,29 @@ html.light-mode .month-checkbox input:checked + span {
     border-color: #0284c7 !important;
 }
 
+html.light-mode select {
+    background-color: #fcfbfa !important;
+    color: #0f172a !important;
+    border: 1.5px solid #cbd5e1 !important;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%230284c7' d='M5 7L0 2h10z'/%3E%3C/svg%3E") !important;
+}
+
+html.light-mode select option {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+}
+
+html.light-mode select option:hover,
+html.light-mode select option:focus {
+    background-color: #f4f1ea !important;
+    color: #0284c7 !important;
+}
+
+html.light-mode .profile-upload-wrapper {
+    background: #f8f6f0 !important;
+    border: 1px dashed #cbd5e1 !important;
+}
+
 html.light-mode .payment-info-bar {
     background: #fdfbf7 !important;
     border: 1px solid #cbd5e1 !important;
