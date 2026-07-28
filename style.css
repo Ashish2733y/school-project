@@ -1320,37 +1320,142 @@ body {
     color: #2dd4bf;
 }
 
-/* Light / Dark Mode Styling */
+/* Light Mode Styling — Clean Soft Cream & Crisp High-Contrast Text */
 html.light-mode {
-    --bg-root: #f1f5f9;
+    --bg-root: #faf9f5;
     --bg-primary: #ffffff;
-    --bg-secondary: #f8fafc;
-    --bg-card: rgba(255, 255, 255, 0.95);
+    --bg-secondary: #f4f1ea;
+    --bg-card: #ffffff;
     --bg-card-hover: #ffffff;
+    --bg-input: #fdfbf7;
+    --bg-input-focus: #ffffff;
+
     --text-primary: #0f172a;
-    --text-secondary: #475569;
-    --text-muted: #64748b;
-    --border: rgba(148, 163, 184, 0.3);
+    --text-secondary: #334155;
+    --text-muted: #475569;
+    --text-label: #0284c7;
+
+    --border: rgba(203, 213, 225, 0.8);
+    --border-strong: rgba(148, 163, 184, 0.8);
+    --border-focus: #0284c7;
+
+    --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.06);
+    --shadow-md: 0 4px 20px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 10px 30px rgba(15, 23, 42, 0.12);
 }
 
 html.light-mode body {
-    background: #f1f5f9 !important;
+    background: #faf9f5 !important;
     color: #0f172a !important;
 }
 
 html.light-mode .header {
-    background: rgba(255, 255, 255, 0.94) !important;
-    border-bottom-color: rgba(148, 163, 184, 0.3) !important;
+    background: rgba(255, 253, 248, 0.96) !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light-mode .header h1,
+html.light-mode .logo-text h1,
+html.light-mode .section-header h2,
+html.light-mode .form-card-header h3,
+html.light-mode .student-profile-card h3,
+html.light-mode label,
+html.light-mode strong {
+    color: #0f172a !important;
+}
+
+html.light-mode .logo-text p,
+html.light-mode .section-header p,
+html.light-mode span,
+html.light-mode p,
+html.light-mode small {
+    color: #334155 !important;
 }
 
 html.light-mode .header-stats {
     background: #ffffff !important;
+    border-color: #cbd5e1 !important;
 }
 
 html.light-mode .stat-pill {
-    background: #f8fafc !important;
-    color: #334155 !important;
-    border-color: #cbd5e1 !important;
+    background: #f4f1ea !important;
+    color: #1e293b !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+html.light-mode .stat-pill:hover {
+    background: #e2e8f0 !important;
+    border-color: #0284c7 !important;
+}
+
+html.light-mode .form-card,
+html.light-mode .student-profile-card,
+html.light-mode .summary-card,
+html.light-mode .stat-card,
+html.light-mode .content-section,
+html.light-mode .tab-container {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06) !important;
+    color: #0f172a !important;
+}
+
+html.light-mode .form-card-header {
+    background: #f8f6f0 !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html.light-mode input[type="text"],
+html.light-mode input[type="number"],
+html.light-mode input[type="tel"],
+html.light-mode input[type="email"],
+html.light-mode input[type="password"],
+html.light-mode select,
+html.light-mode textarea {
+    background: #fcfbfa !important;
+    color: #0f172a !important;
+    border: 1.5px solid #cbd5e1 !important;
+}
+
+html.light-mode input::placeholder,
+html.light-mode textarea::placeholder {
+    color: #64748b !important;
+}
+
+html.light-mode input:focus,
+html.light-mode select:focus,
+html.light-mode textarea:focus {
+    background: #ffffff !important;
+    border-color: #0284c7 !important;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15) !important;
+}
+
+html.light-mode .tab-btn {
+    color: #475569 !important;
+    background: #f4f1ea !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+html.light-mode .tab-btn.active {
+    background: #0284c7 !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3) !important;
+}
+
+html.light-mode table th {
+    background: #f1ebd9 !important;
+    color: #0f172a !important;
+    border-bottom: 2px solid #cbd5e1 !important;
+}
+
+html.light-mode table td {
+    color: #1e293b !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html.light-mode table tr:nth-child(even) td {
+    background: #faf8f5 !important;
 }
 
 .line-input-group input {
