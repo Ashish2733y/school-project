@@ -111,11 +111,11 @@ let currentActivityFee = 50;
 
 // ============ THEME PALETTE MANAGER ============
 const SNP_THEMES = [
+    { id: 'classic', name: '💼 Classic Slate', class: 'theme-classic', animate: false },
+    { id: 'normal', name: '🎨 Normal 3-Color', class: 'theme-normal', animate: false },
     { id: 'cyber', name: '⚡ Cyber Neon', class: '', animate: true },
     { id: 'sunset', name: '🌅 Sunset Glow', class: 'theme-sunset', animate: true },
-    { id: 'emerald', name: '🌲 Emerald Gold', class: 'theme-emerald', animate: true },
-    { id: 'normal', name: '🎨 Normal 3-Color (No Anim)', class: 'theme-normal', animate: false },
-    { id: 'classic', name: '💼 Classic Slate (No Anim)', class: 'theme-classic', animate: false }
+    { id: 'emerald', name: '🌲 Emerald Gold', class: 'theme-emerald', animate: true }
 ];
 let currentThemeIndex = 0;
 
@@ -128,6 +128,7 @@ function initTheme() {
         }
     }
     applyTheme(currentThemeIndex, false);
+    initDarkMode();
 }
 
 function cycleTheme() {
@@ -137,7 +138,10 @@ function cycleTheme() {
 
 function applyTheme(idx, notify = true) {
     const theme = SNP_THEMES[idx];
-    document.documentElement.className = theme.class;
+    document.documentElement.classList.remove('theme-sunset', 'theme-emerald', 'theme-normal', 'theme-classic');
+    if (theme.class) {
+        document.documentElement.classList.add(theme.class);
+    }
     const nameEl = document.getElementById('themeName');
     if (nameEl) nameEl.textContent = theme.name;
     localStorage.setItem('snp_theme_index', idx);
@@ -155,6 +159,56 @@ function applyTheme(idx, notify = true) {
 
     if (notify && typeof showToast === 'function') {
         showToast('info', 'Theme Updated', `Switched theme to ${theme.name}`);
+    }
+}
+
+// ============ PASSWORD VISIBILITY TOGGLE ============
+function togglePasswordVisibility(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    if (!input || !icon) return;
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+
+// ============ DARK / LIGHT MODE TOGGLE ============
+function initDarkMode() {
+    const savedMode = localStorage.getItem('snp_dark_mode');
+    if (savedMode === 'light') {
+        document.documentElement.classList.add('light-mode');
+        updateDarkModeUI(false);
+    } else {
+        document.documentElement.classList.remove('light-mode');
+        updateDarkModeUI(true);
+    }
+}
+
+function toggleDarkMode() {
+    const isLight = document.documentElement.classList.toggle('light-mode');
+    const isDark = !isLight;
+    localStorage.setItem('snp_dark_mode', isDark ? 'dark' : 'light');
+    updateDarkModeUI(isDark);
+    if (typeof showToast === 'function') {
+        showToast('info', 'Mode Switched', isDark ? 'Switched to Dark Mode' : 'Switched to Light Mode');
+    }
+}
+
+function updateDarkModeUI(isDark) {
+    const icon = document.getElementById('darkModeIcon');
+    const text = document.getElementById('darkModeText');
+    if (icon) {
+        icon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+    }
+    if (text) {
+        text.textContent = isDark ? 'Dark Mode' : 'Light Mode';
     }
 }
 
