@@ -222,8 +222,23 @@ function safeSchool(row) {
 // AUTH ROUTES
 // ════════════════════════════════════════════════════════════════════════════
 
+// Informative GET handler for browser checks
+app.get(['/api/auth/login', '/auth/login'], (req, res) => {
+    res.status(405).json({
+        success: false,
+        message: 'School Next Pro Auth API is active. Please submit an HTTP POST request with "code" and "password" in the JSON body.'
+    });
+});
+
+app.get(['/api/auth/register', '/auth/register'], (req, res) => {
+    res.status(405).json({
+        success: false,
+        message: 'School Next Pro Registration API is active. Please submit an HTTP POST request with school details in the JSON body.'
+    });
+});
+
 // POST /api/auth/register — Register or update a school
-app.post('/api/auth/register', async (req, res) => {
+app.post(['/api/auth/register', '/auth/register'], async (req, res) => {
     const { logo, name, code, email, ownerNumber, password } = req.body;
 
     // Input validation
@@ -268,7 +283,7 @@ app.post('/api/auth/register', async (req, res) => {
 });
 
 // POST /api/auth/login — Login a school
-app.post('/api/auth/login', async (req, res) => {
+app.post(['/api/auth/login', '/auth/login'], async (req, res) => {
     const { code, password } = req.body;
 
     if (!code || !password) {
@@ -315,7 +330,7 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // PUT /api/auth/school/update — Update school details (logo, email, phone, password)
-app.put('/api/auth/school/update', async (req, res) => {
+app.put(['/api/auth/school/update', '/auth/school/update'], async (req, res) => {
     const { code, name, email, ownerNumber, password, logo } = req.body;
 
     if (!code) {
@@ -358,7 +373,7 @@ app.put('/api/auth/school/update', async (req, res) => {
 // ════════════════════════════════════════════════════════════════════════════
 
 // GET /api/students/:schoolCode — Fetch all students for a school
-app.get('/api/students/:schoolCode', async (req, res) => {
+app.get(['/api/students/:schoolCode', '/students/:schoolCode'], async (req, res) => {
     const { schoolCode } = req.params;
     if (!schoolCode) {
         return res.status(400).json({ success: false, message: 'School code is required.' });
@@ -424,7 +439,7 @@ app.get('/api/students/:schoolCode', async (req, res) => {
 });
 
 // POST /api/students — Add a new student
-app.post('/api/students', async (req, res) => {
+app.post(['/api/students', '/students'], async (req, res) => {
     const { schoolCode, student } = req.body;
 
     if (!schoolCode || !student || !student.id) {
@@ -495,7 +510,7 @@ app.post('/api/students', async (req, res) => {
 });
 
 // POST /api/payments — Save monthly payment records
-app.post('/api/payments', async (req, res) => {
+app.post(['/api/payments', '/payments'], async (req, res) => {
     const { schoolCode, studentId, payments, remainingDue } = req.body;
 
     if (!schoolCode || !studentId) {
@@ -535,7 +550,7 @@ app.post('/api/payments', async (req, res) => {
 });
 
 // PUT /api/students/:schoolCode/:studentId — Update student details
-app.put('/api/students/:schoolCode/:studentId', async (req, res) => {
+app.put(['/api/students/:schoolCode/:studentId', '/students/:schoolCode/:studentId'], async (req, res) => {
     const { schoolCode, studentId } = req.params;
     const s = req.body;
 
@@ -569,7 +584,7 @@ app.put('/api/students/:schoolCode/:studentId', async (req, res) => {
 });
 
 // DELETE /api/students/:schoolCode/:studentId — Delete a student
-app.delete('/api/students/:schoolCode/:studentId', async (req, res) => {
+app.delete(['/api/students/:schoolCode/:studentId', '/students/:schoolCode/:studentId'], async (req, res) => {
     const { schoolCode, studentId } = req.params;
     try {
         await pool.query(
@@ -584,7 +599,7 @@ app.delete('/api/students/:schoolCode/:studentId', async (req, res) => {
 });
 
 // ─── 404 fallback for unmatched API routes ───────────────────────────────────
-app.use('/api/*', (req, res) => {
+app.use('*', (req, res) => {
     res.status(404).json({ success: false, message: 'API endpoint not found.' });
 });
 
