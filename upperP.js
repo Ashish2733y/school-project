@@ -1469,6 +1469,7 @@ function checkAuthStatus() {
 
     if (activeSchoolCode && schoolAccounts[activeSchoolCode]) {
         authOverlay.style.display = 'none';
+        document.body.style.overflow = '';
         loadSchoolStudentData();
         updateHeaderStats();
         applySchoolProfileHeader(schoolAccounts[activeSchoolCode]);
@@ -1476,6 +1477,7 @@ function checkAuthStatus() {
         studentsDB = {};
         updateHeaderStats();
         authOverlay.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
         const hasAccounts = Object.keys(schoolAccounts).length > 0;
         if (hasAccounts) {
             switchAuthTab('login');
@@ -1658,6 +1660,7 @@ function executeLoginSuccess(code, account) {
 
     const authOverlay = document.getElementById('authOverlay');
     if (authOverlay) authOverlay.style.display = 'none';
+    document.body.style.overflow = '';
 
     document.getElementById('loginForm').reset();
 
