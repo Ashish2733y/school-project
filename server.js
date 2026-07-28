@@ -73,14 +73,30 @@ function getPool() {
     return _pool;
 }
 
-// Convenience alias used throughout the file
-const pool = new Proxy({}, {
-    get(_, prop) {
-        const p = getPool();
-        if (!p) throw new Error('DATABASE_URL is not configured. Set it in Vercel Environment Variables.');
-        return p[prop].bind(p);
+// ─── DB Initialisation & Middleware ──────────────────────────────────────────
+let dbInitPromise = null;
+
+async function ensureDbReady(req, res, next) {
+    if (!process.env.DATABASE_URL) {
+        return res.status(503).json({
+            success: false,
+            message: 'DATABASE_URL is not configured in Vercel Environment Variables. Please set DATABASE_URL in Vercel Settings -> Environment Variables and redeploy.'
+        });
     }
-});
+    if (!dbInitPromise) {
+        dbInitPromise = initDatabase().catch(err => {
+            console.error('❌ Async DB init error:', err.message);
+            dbInitPromise = null;
+        });
+    }
+    await dbInitPromise;
+    next();
+}
+
+app.use('/api', ensureDbReady);
+app.use('/auth', ensureDbReady);
+app.use('/students', ensureDbReady);
+app.use('/payments', ensureDbReady);
 
 // ─── DB Initialisation ───────────────────────────────────────────────────────
 async function initDatabase() {
@@ -278,7 +294,7 @@ app.post(['/api/auth/register', '/auth/register'], async (req, res) => {
         res.json({ success: true, message: 'School registered successfully!' });
     } catch (err) {
         console.error('❌ Registration Error:', err.message);
-        res.status(500).json({ success: false, message: 'Internal server error.' });
+        res.status(500).json({ success: false, message: err.message || 'Registration failed.' });
     }
 });
 
@@ -325,7 +341,7 @@ app.post(['/api/auth/login', '/auth/login'], async (req, res) => {
         res.json({ success: true, school: safeSchool(school) });
     } catch (err) {
         console.error('❌ Login Error:', err.message);
-        res.status(500).json({ success: false, message: 'Internal server error.' });
+        res.status(500).json({ success: false, message: err.message || 'Login failed.' });
     }
 });
 
@@ -364,7 +380,7 @@ app.put(['/api/auth/school/update', '/auth/school/update'], async (req, res) => 
         res.json({ success: true, message: 'School profile updated successfully!' });
     } catch (err) {
         console.error('❌ School Update Error:', err.message);
-        res.status(500).json({ success: false, message: 'Internal server error.' });
+        res.status(500).json({ success: false, message: err.message || 'Update failed.' });
     }
 });
 
@@ -434,7 +450,7 @@ app.get(['/api/students/:schoolCode', '/students/:schoolCode'], async (req, res)
         res.json({ success: true, students: studentsMap });
     } catch (err) {
         console.error('❌ Error fetching students:', err.message);
-        res.status(500).json({ success: false, message: 'Internal server error.' });
+        res.status(500).json({ success: false, message: err.message || 'Error fetching students.' });
     }
 });
 
@@ -505,7 +521,7 @@ app.post(['/api/students', '/students'], async (req, res) => {
         res.json({ success: true, message: 'Student registered successfully!' });
     } catch (err) {
         console.error('❌ Error saving student:', err.message);
-        res.status(500).json({ success: false, message: 'Internal server error.' });
+        res.status(500).json({ success: false, message: err.message || 'Error saving student.' });
     }
 });
 
@@ -545,7 +561,7 @@ app.post(['/api/payments', '/payments'], async (req, res) => {
         res.json({ success: true, message: 'Payment recorded successfully!' });
     } catch (err) {
         console.error('❌ Error saving payment:', err.message);
-        res.status(500).json({ success: false, message: 'Internal server error.' });
+        res.status(500).json({ success: false, message: err.message || 'Error saving payment.' });
     }
 });
 
@@ -579,7 +595,7 @@ app.put(['/api/students/:schoolCode/:studentId', '/students/:schoolCode/:student
         res.json({ success: true, message: 'Student updated successfully!' });
     } catch (err) {
         console.error('❌ Error updating student:', err.message);
-        res.status(500).json({ success: false, message: 'Internal server error.' });
+        res.status(500).json({ success: false, message: err.message || 'Error updating student.' });
     }
 });
 
@@ -594,7 +610,7 @@ app.delete(['/api/students/:schoolCode/:studentId', '/students/:schoolCode/:stud
         res.json({ success: true, message: 'Student deleted successfully!' });
     } catch (err) {
         console.error('❌ Error deleting student:', err.message);
-        res.status(500).json({ success: false, message: 'Internal server error.' });
+        res.status(500).json({ success: false, message: err.message || 'Error deleting student.' });
     }
 });
 
