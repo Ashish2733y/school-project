@@ -73,6 +73,16 @@ function getPool() {
     return _pool;
 }
 
+// Convenience alias used throughout the file
+const pool = new Proxy({}, {
+    get(_, prop) {
+        const p = getPool();
+        if (!p) throw new Error('DATABASE_URL is not configured. Set it in Vercel Environment Variables.');
+        const target = p[prop];
+        return typeof target === 'function' ? target.bind(p) : target;
+    }
+});
+
 // ─── DB Initialisation & Middleware ──────────────────────────────────────────
 let dbInitPromise = null;
 
