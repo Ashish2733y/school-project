@@ -40,7 +40,7 @@ app.use(cors({
     origin: (origin, callback) => {
         // Allow requests with no origin (mobile apps, Postman, curl)
         if (!origin) return callback(null, true);
-        if (allowedOrigins.includes(origin)) return callback(null, true);
+        if (allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) return callback(null, true);
         return callback(new Error(`CORS policy: origin "${origin}" not allowed`));
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -130,8 +130,8 @@ async function initDatabase() {
                 logo_data   TEXT         NULL,
                 created_at  TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
             );
-            CREATE INDEX IF NOT EXISTS idx_school_code ON schools(school_code);
         `);
+        await pool.query(`CREATE INDEX IF NOT EXISTS idx_school_code ON schools(school_code);`);
 
         // 2. STUDENTS TABLE
         await pool.query(`
@@ -167,8 +167,8 @@ async function initDatabase() {
                 CONSTRAINT fk_students_schools
                     FOREIGN KEY (school_code) REFERENCES schools(school_code) ON DELETE CASCADE
             );
-            CREATE INDEX IF NOT EXISTS idx_students_school_code ON students(school_code);
         `);
+        await pool.query(`CREATE INDEX IF NOT EXISTS idx_students_school_code ON students(school_code);`);
 
         // 3. PAYMENTS TABLE
         await pool.query(`
@@ -186,8 +186,8 @@ async function initDatabase() {
                     FOREIGN KEY (school_code, student_id)
                     REFERENCES students(school_code, student_id) ON DELETE CASCADE
             );
-            CREATE INDEX IF NOT EXISTS idx_payments_school_student ON payments(school_code, student_id);
         `);
+        await pool.query(`CREATE INDEX IF NOT EXISTS idx_payments_school_student ON payments(school_code, student_id);`);
 
         // 4. FEE CONFIGURATIONS TABLE
         await pool.query(`
@@ -350,8 +350,8 @@ app.post(['/api/auth/login', '/auth/login'], async (req, res) => {
         // Return school info WITHOUT password
         res.json({ success: true, school: safeSchool(school) });
     } catch (err) {
-        console.error('❌ Login Error:', err.message);
-        res.status(500).json({ success: false, message: err.message || 'Login failed.' });
+        console.error('❌ Login Error:', err);
+        res.status(500).json({ success: false, message: `DB Error: ${err.message}` });
     }
 });
 
@@ -631,8 +631,8 @@ app.use('*', (req, res) => {
 
 // ─── Global Error Handler ─────────────────────────────────────────────────────
 app.use((err, req, res, _next) => {
-    console.error('Unhandled error:', err.message);
-    res.status(500).json({ success: false, message: 'Internal server error.' });
+    console.error('Unhandled error:', err.message || err);
+    res.status(500).json({ success: false, message: err.message ? `Server Error: ${err.message}` : 'Internal server error.' });
 });
 
 // ─── Export for Vercel serverless + conditional local listen ─────────────────
