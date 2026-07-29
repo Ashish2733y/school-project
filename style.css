@@ -2436,6 +2436,153 @@ body {
     color: #2dd4bf;
 }
 
+/* ── SIGNUP FORM RESPONSIVE STYLING ─────────────────────────── */
+#signupForm {
+    overflow-y: auto;
+    max-height: min(58vh, 460px);
+    padding: 1rem 1.6rem 1.4rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem 0.9rem;
+    position: relative;
+    z-index: 3;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(56, 189, 248, 0.4) transparent;
+}
+
+#signupForm::-webkit-scrollbar {
+    width: 4px;
+}
+#signupForm::-webkit-scrollbar-thumb {
+    background: rgba(56, 189, 248, 0.4);
+    border-radius: 9999px;
+}
+
+#signupForm .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+#signupForm .form-group label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: rgba(224, 231, 255, 0.9);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+#signupForm .form-group label i {
+    color: #38bdf8;
+    font-size: 0.82rem;
+}
+
+#signupForm .form-group input[type="text"],
+#signupForm .form-group input[type="email"],
+#signupForm .form-group input[type="tel"],
+#signupForm .form-group input[type="password"] {
+    background: rgba(6, 16, 38, 0.75) !important;
+    border: 1px solid rgba(147, 197, 253, 0.3) !important;
+    border-radius: 8px !important;
+    padding: 0.45rem 0.75rem !important;
+    color: #ffffff !important;
+    font-size: 0.88rem !important;
+    height: 38px !important;
+    outline: none !important;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#signupForm .form-group input:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+}
+
+#signupForm .form-group input::placeholder {
+    color: rgba(224, 231, 255, 0.55) !important;
+}
+
+#signupForm .profile-upload-group {
+    margin-bottom: 0.2rem;
+}
+
+#signupForm .profile-upload-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    background: rgba(6, 16, 38, 0.5);
+    border: 1px dashed rgba(147, 197, 253, 0.3);
+    padding: 0.5rem 0.75rem;
+    border-radius: 10px;
+}
+
+#signupForm .profile-preview-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: rgba(14, 34, 76, 0.8);
+    border: 1px solid rgba(147, 197, 253, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #38bdf8;
+    flex-shrink: 0;
+}
+
+#signupForm .profile-upload-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+#signupForm .btn-upload-photo {
+    background: rgba(56, 189, 248, 0.15);
+    border: 1px solid rgba(56, 189, 248, 0.4);
+    color: #38bdf8;
+    padding: 0.3rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    transition: all 0.2s;
+}
+
+#signupForm .btn-upload-photo:hover {
+    background: rgba(56, 189, 248, 0.3);
+    color: #ffffff;
+}
+
+#signupForm .btn-submit {
+    margin-top: 0.4rem;
+    height: 44px !important;
+    font-size: 0.92rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 1px !important;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+    border-radius: 8px !important;
+}
+
+#signupForm .auth-switch-text {
+    font-size: 0.8rem;
+    text-align: center;
+    color: rgba(224, 231, 255, 0.8);
+    margin-top: 0.3rem;
+}
+
+#signupForm .auth-switch-text a {
+    color: #38bdf8;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+#signupForm .auth-switch-text a:hover {
+    text-decoration: underline;
+}
+
 /* Light Mode Styling — Clean Soft Cream & Crisp High-Contrast Text */
 html.light-mode {
     --bg-root: #faf9f5;
@@ -3665,30 +3812,37 @@ html.light-mode .auth-form input:-webkit-autofill:active {
 /* ── RESPONSIVE AUTH OVERLAY FOR MOBILE PHONES & SHORT VIEWPORTS ────────── */
 @media (max-width: 480px) {
     .auth-overlay {
-        padding: 0.6rem;
+        padding: 0.5rem;
     }
 
     .auth-card {
-        width: 95vw;
-        max-height: 94vh;
+        width: 94vw;
+        max-height: 90vh;
         border-radius: 20px;
     }
 
     .auth-header-brand {
-        padding: 1.2rem 1rem 0.4rem;
+        padding: 1rem 0.8rem 0.3rem;
     }
 
     .auth-tabs {
-        margin: 0.4rem 1rem 0.5rem;
+        margin: 0.3rem 0.8rem 0.4rem;
     }
 
     .auth-form.login-image-style {
-        padding: 0.9rem 1.2rem 1.3rem;
-        gap: 0.85rem;
+        padding: 0.8rem 1rem 1.2rem;
+        gap: 0.8rem;
+    }
+
+    #signupForm {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+        padding: 0.8rem 1rem 1.2rem;
+        max-height: min(58vh, 420px);
     }
 
     .line-input-group {
-        padding: 0.45rem 0.1rem;
+        padding: 0.4rem 0.1rem;
     }
 
     .remember-me-label, .forgot-link {
@@ -3698,18 +3852,18 @@ html.light-mode .auth-form input:-webkit-autofill:active {
 
 @media (max-height: 700px) {
     .auth-card {
-        max-height: 96vh;
+        max-height: 92vh;
     }
 
     .brand-logo-badge {
-        width: 48px;
-        height: 48px;
-        margin-bottom: 0.3rem;
+        width: 46px;
+        height: 46px;
+        margin-bottom: 0.25rem;
     }
 
     .brand-logo-badge svg {
-        width: 28px;
-        height: 28px;
+        width: 26px;
+        height: 26px;
     }
 
     .brand-title {
@@ -3721,16 +3875,22 @@ html.light-mode .auth-form input:-webkit-autofill:active {
     }
 
     .auth-header-brand {
-        padding: 0.9rem 1rem 0.3rem;
+        padding: 0.8rem 0.8rem 0.25rem;
     }
 
     .auth-tabs {
-        margin: 0.3rem 1rem 0.4rem;
+        margin: 0.25rem 0.8rem 0.35rem;
     }
 
     .auth-form.login-image-style {
-        padding: 0.8rem 1.2rem 1.1rem;
-        gap: 0.75rem;
+        padding: 0.7rem 1rem 1rem;
+        gap: 0.7rem;
+    }
+
+    #signupForm {
+        padding: 0.7rem 1rem 1rem;
+        gap: 0.55rem;
+        max-height: 52vh;
     }
 
     .login-image-btn {
