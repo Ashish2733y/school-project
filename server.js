@@ -584,15 +584,15 @@ app.put(['/api/students/:schoolCode/:studentId', '/students/:schoolCode/:student
         const result = await pool.query(
             `UPDATE students SET
                 name = $1, father_name = $2, mother_name = $3, mobile = $4, address = $5,
-                class = $6, section = $7, bus_number = $8, bus_distance = $9, bus_fee = $10,
-                monthly_fee = $11, photo_data = COALESCE($12, photo_data)
-             WHERE school_code = $13 AND student_id = $14`,
+                class = $6, section = $7, bus_number = $8, bus_distance = $9, tuition_fee = $10,
+                bus_fee = $11, monthly_fee = $12, photo_data = COALESCE($13, photo_data)
+             WHERE school_code = $14 AND student_id = $15`,
             [
                 sanitize(s.name), sanitize(s.fatherName), sanitize(s.motherName),
                 sanitize(s.mobile, 20), sanitize(s.address, 1000),
                 sanitize(s.class, 50), sanitize(s.section, 10),
                 s.busNumber || '', s.busDistance || '',
-                s.busFee || 0, s.monthlyFee || 0,
+                s.tuitionFee || 0, s.busFee || 0, s.monthlyFee || 0,
                 s.photo || null,
                 schoolCode, studentId
             ]

@@ -111,6 +111,7 @@ let currentActivityFee = 50;
 
 // ============ THEME PALETTE MANAGER ============
 const SNP_THEMES = [
+    { id: 'cream', name: '🍦 Warm Cream', class: 'theme-cream', animate: false },
     { id: 'classic', name: '💼 Classic Slate', class: 'theme-classic', animate: false },
     { id: 'normal', name: '🎨 Normal 3-Color', class: 'theme-normal', animate: false },
     { id: 'cyber', name: '⚡ Cyber Neon', class: '', animate: true },
@@ -138,7 +139,7 @@ function cycleTheme() {
 
 function applyTheme(idx, notify = true) {
     const theme = SNP_THEMES[idx];
-    document.documentElement.classList.remove('theme-sunset', 'theme-emerald', 'theme-normal', 'theme-classic');
+    document.documentElement.classList.remove('theme-cream', 'theme-sunset', 'theme-emerald', 'theme-normal', 'theme-classic');
     if (theme.class) {
         document.documentElement.classList.add(theme.class);
     }
@@ -210,6 +211,12 @@ function updateDarkModeUI(isDark) {
     if (text) {
         text.textContent = isDark ? 'Dark Mode' : 'Light Mode';
     }
+    document.querySelectorAll('.loginDarkModeIcon').forEach(el => {
+        el.className = isDark ? 'fas fa-moon loginDarkModeIcon' : 'fas fa-sun loginDarkModeIcon';
+    });
+    document.querySelectorAll('.loginDarkModeText').forEach(el => {
+        el.textContent = isDark ? 'Dark Mode' : 'Light Mode';
+    });
 }
 
 // ============ INITIALIZATION ============
@@ -1249,6 +1256,32 @@ function processPayment() {
     showModal('success', 'Payment Received!', successMsg);
 }
 
+// ============ LIVE EDIT FEE PREVIEW ============
+function updateEditFeePreview(triggerSource = 'class') {
+    const editClass = document.getElementById('editClass').value;
+    const editDistance = document.getElementById('editBusDistance').value;
+    const tuitionInput = document.getElementById('editTuitionFee');
+
+    let tuitionFee = 0;
+    if (triggerSource === 'class') {
+        tuitionFee = editClass ? (FEE_CONFIG.tuitionFeeByClass[editClass] || 0) : 0;
+        if (tuitionInput) tuitionInput.value = tuitionFee;
+    } else {
+        tuitionFee = tuitionInput ? (parseInt(tuitionInput.value, 10) || 0) : (FEE_CONFIG.tuitionFeeByClass[editClass] || 0);
+    }
+
+    const busFee = editDistance ? (FEE_CONFIG.busFees[editDistance] || 0) : 0;
+    const monthlyFee = tuitionFee + busFee;
+
+    const monthlyEl = document.getElementById('editMonthlyFeePreview');
+    const tuitionEl = document.getElementById('editTuitionFeePreview');
+    const busEl = document.getElementById('editBusFeePreview');
+
+    if (monthlyEl) monthlyEl.textContent = '₹' + monthlyFee.toLocaleString('en-IN');
+    if (tuitionEl) tuitionEl.textContent = '₹' + tuitionFee.toLocaleString('en-IN');
+    if (busEl) busEl.textContent = '₹' + busFee.toLocaleString('en-IN');
+}
+
 // ============ EDIT STUDENT ============
 function toggleEditMode() {
     const editCard = document.getElementById('editStudentCard');
@@ -1273,6 +1306,11 @@ function toggleEditMode() {
     document.getElementById('editBusNumber').value = student.busNumber;
     document.getElementById('editBusDistance').value = student.busDistance;
 
+    const tuitionInput = document.getElementById('editTuitionFee');
+    if (tuitionInput) {
+        tuitionInput.value = student.tuitionFee !== undefined ? student.tuitionFee : (FEE_CONFIG.tuitionFeeByClass[student.class] || 0);
+    }
+
     // Load photo into edit form
     const photo = student.photo || '';
     const hiddenPhoto = document.getElementById('editPhotoData');
@@ -1290,6 +1328,9 @@ function toggleEditMode() {
         }
     }
 
+    // Live preview update for current class & distance
+    updateEditFeePreview('manual');
+
     editCard.style.display = 'block';
     document.getElementById('btnEditProfile').innerHTML = '<i class="fas fa-times"></i> Cancel';
 }
@@ -1300,8 +1341,13 @@ function saveStudentEdits(event) {
     if (!currentSearchId || !studentsDB[currentSearchId]) return false;
 
     const student = studentsDB[currentSearchId];
+    const newClass = document.getElementById('editClass').value;
     const newDistance = document.getElementById('editBusDistance').value;
+    const tuitionInput = document.getElementById('editTuitionFee');
+
+    const newTuitionFee = tuitionInput ? (parseInt(tuitionInput.value, 10) || 0) : (FEE_CONFIG.tuitionFeeByClass[newClass] || 0);
     const newBusFee = FEE_CONFIG.busFees[newDistance] || 0;
+    const newMonthlyFee = newTuitionFee + newBusFee;
 
     student.name = document.getElementById('editName').value.trim();
     student.photo = document.getElementById('editPhotoData') ? document.getElementById('editPhotoData').value : '';
@@ -1309,20 +1355,28 @@ function saveStudentEdits(event) {
     student.motherName = document.getElementById('editMother').value.trim();
     student.mobile = document.getElementById('editMobile').value.trim();
     student.address = document.getElementById('editAddress').value.trim();
-    student.class = document.getElementById('editClass').value;
+    student.class = newClass;
     student.section = document.getElementById('editSection').value.toUpperCase();
     student.busNumber = document.getElementById('editBusNumber').value.trim();
     student.busDistance = newDistance;
+    student.tuitionFee = newTuitionFee;
     student.busFee = newBusFee;
-    student.monthlyFee = student.tuitionFee + newBusFee;
+    student.monthlyFee = newMonthlyFee;
 
     saveData();
+
+    // Async sync with SQL server PUT API
+    fetch(`${API_BASE_URL}/students/${activeSchoolCode}/${currentSearchId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(student)
+    }).catch(err => console.error('Student edit sync error:', err));
 
     populateProfile(student);
     populateFeeDashboard(student);
     toggleEditMode();
 
-    showToast('success', 'Updated', `${student.name}'s details have been updated.`);
+    showToast('success', 'Updated', `${student.name}'s class updated to ${newClass} (Monthly Fee: ₹${newMonthlyFee.toLocaleString('en-IN')}).`);
     return false;
 }
 

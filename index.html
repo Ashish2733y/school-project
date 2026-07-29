@@ -108,7 +108,7 @@
                     title="Switch 3-Color Dynamic Palette" aria-label="Switch theme" role="button" tabindex="0"
                     onkeydown="if(event.key==='Enter'||event.key===' ')cycleTheme()">
                     <i class="fas fa-palette" aria-hidden="true"></i>
-                    <span id="themeName">💼 Classic Slate</span>
+                    <span id="themeName">🍦 Warm Cream</span>
                 </div>
 
                 <!-- Dark Mode Toggle Pill -->
@@ -175,18 +175,19 @@
                                     <input type="file" id="stdPhotoInput" accept="image/*"
                                         onchange="handlePhotoUpload(event, 'admissionPhotoPreview', 'stdPhotoData')"
                                         style="display:none;">
-                                    <button type="button" class="btn-upload-photo"
-                                        onclick="document.getElementById('stdPhotoInput').click()">
-                                        <i class="fas fa-upload"></i> Upload Photo
-                                    </button>
-                                    <button type="button" class="btn-remove-photo" id="btnRemoveAdmissionPhoto"
-                                        onclick="removeUploadedPhoto('admissionPhotoPreview', 'stdPhotoData')"
-                                        style="display:none;">
-                                        <i class="fas fa-trash"></i> Remove
-                                    </button>
+                                    <div class="profile-upload-actions">
+                                        <button type="button" class="btn-upload-photo"
+                                            onclick="document.getElementById('stdPhotoInput').click()">
+                                            <i class="fas fa-upload"></i> Upload Photo
+                                        </button>
+                                        <button type="button" class="btn-remove-photo" id="btnRemoveAdmissionPhoto"
+                                            onclick="removeUploadedPhoto('admissionPhotoPreview', 'stdPhotoData')"
+                                            style="display:none;">
+                                            <i class="fas fa-trash"></i> Remove
+                                        </button>
+                                    </div>
                                     <input type="hidden" id="stdPhotoData" value="">
-                                    <small class="upload-hint">Upload student passport size photo (JPG, PNG,
-                                        WEBP)</small>
+                                    <small class="upload-hint">Upload student passport size photo (JPG, PNG, WEBP)</small>
                                 </div>
                             </div>
                         </div>
@@ -560,7 +561,7 @@
                         </div>
                         <div class="form-group">
                             <label for="editClass"><i class="fas fa-chalkboard"></i> Class</label>
-                            <select id="editClass" required>
+                            <select id="editClass" required onchange="updateEditFeePreview('class')">
                                 <option value="Nursery">Nursery</option>
                                 <option value="LKG">LKG</option>
                                 <option value="UKG">UKG</option>
@@ -579,6 +580,10 @@
                             </select>
                         </div>
                         <div class="form-group">
+                            <label for="editTuitionFee"><i class="fas fa-money-bill-wave"></i> Tuition Fee (Monthly)</label>
+                            <input type="number" id="editTuitionFee" min="0" placeholder="e.g. 500" required oninput="updateEditFeePreview('manual')">
+                        </div>
+                        <div class="form-group">
                             <label for="editSection"><i class="fas fa-layer-group"></i> Section</label>
                             <select id="editSection" required>
                                 <option value="A">A</option>
@@ -594,12 +599,21 @@
                         </div>
                         <div class="form-group">
                             <label for="editBusDistance"><i class="fas fa-road"></i> Distance</label>
-                            <select id="editBusDistance" required>
+                            <select id="editBusDistance" required onchange="updateEditFeePreview('manual')">
                                 <option value="5">1 to 5 KM — ₹500</option>
                                 <option value="10">5 to 10 KM — ₹1,000</option>
                                 <option value="15">10 to 15 KM — ₹1,500</option>
                                 <option value="20">15 to 20 KM — ₹2,000</option>
                             </select>
+                        </div>
+
+                        <!-- Live Class Fee Preview Badge -->
+                        <div class="form-group full-width" id="editFeePreviewBox" style="background: var(--card-bg-subtle, rgba(255,255,255,0.05)); padding: 0.85rem 1rem; border-radius: var(--radius-sm, 8px); border: 1px solid var(--border); margin-top: 0.25rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.9rem;">
+                                <span><i class="fas fa-calculator" style="color: var(--color-cyan);"></i> <strong>Updated Class Monthly Fee:</strong></span>
+                                <span id="editMonthlyFeePreview" style="font-weight: 700; color: var(--color-cyan); font-family: var(--font-mono); font-size: 1.05rem;">₹0</span>
+                            </div>
+                            <small style="color: var(--text-muted); display: block; margin-top: 0.3rem;">(Tuition Fee: <strong id="editTuitionFeePreview" style="color:var(--text-primary);">₹0</strong> + Bus Fee: <strong id="editBusFeePreview" style="color:var(--text-primary);">₹0</strong>)</small>
                         </div>
 
                         <div class="form-actions full-width">
@@ -850,10 +864,19 @@
     <div class="auth-overlay" id="authOverlay">
         <div class="auth-card">
 
-            <!-- Curved Teal Banner Header (with School Next Pro Brand) -->
+            <!-- Curved Teal Banner Header (with School Next Pro Brand & Dark Mode Toggle) -->
             <div class="auth-banner-header">
-                <div class="auth-brand-badge">
-                    <i class="fas fa-graduation-cap"></i> School Next <span>Pro</span>
+                <div class="auth-banner-top">
+                    <div class="auth-brand-badge">
+                        <i class="fas fa-graduation-cap"></i> School Next <span>Pro</span>
+                    </div>
+                    <!-- Login Form Dark Mode Toggle Pill -->
+                    <div class="stat-pill dark-mode-pill login-dark-toggle" onclick="toggleDarkMode()"
+                        title="Toggle Dark / Light Mode" aria-label="Toggle dark mode" role="button" tabindex="0"
+                        onkeydown="if(event.key==='Enter'||event.key===' ')toggleDarkMode()">
+                        <i class="fas fa-moon loginDarkModeIcon" aria-hidden="true"></i>
+                        <span class="loginDarkModeText">Dark Mode</span>
+                    </div>
                 </div>
                 <h2 id="authBannerTitle">LOGIN YOUR SCHOOL</h2>
             </div>
@@ -1142,15 +1165,17 @@
                         <i class="fas fa-university"></i>
                     </div>
                     <div class="profile-upload-controls">
-                        <label class="btn-upload-photo" for="editSchoolLogoInput">
-                            <i class="fas fa-camera"></i> Change School Logo
-                        </label>
                         <input type="file" id="editSchoolLogoInput" accept="image/*" style="display:none;"
                             onchange="handlePhotoUpload(event, 'editSchoolLogoPreview', 'editSchoolLogoData')">
-                        <button type="button" class="btn-remove-photo"
-                            onclick="removeUploadedPhoto('editSchoolLogoPreview', 'editSchoolLogoData')">
-                            <i class="fas fa-trash"></i> Remove Logo
-                        </button>
+                        <div class="profile-upload-actions">
+                            <label class="btn-upload-photo" for="editSchoolLogoInput">
+                                <i class="fas fa-camera"></i> Change School Logo
+                            </label>
+                            <button type="button" class="btn-remove-photo"
+                                onclick="removeUploadedPhoto('editSchoolLogoPreview', 'editSchoolLogoData')">
+                                <i class="fas fa-trash"></i> Remove Logo
+                            </button>
+                        </div>
                         <input type="hidden" id="editSchoolLogoData" value="">
                         <span class="upload-hint">Upload official PNG, JPG or WEBP school logo</span>
                     </div>
