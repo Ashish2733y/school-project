@@ -211,12 +211,6 @@ function updateDarkModeUI(isDark) {
     if (text) {
         text.textContent = isDark ? 'Dark Mode' : 'Light Mode';
     }
-    document.querySelectorAll('.loginDarkModeIcon').forEach(el => {
-        el.className = isDark ? 'fas fa-moon loginDarkModeIcon' : 'fas fa-sun loginDarkModeIcon';
-    });
-    document.querySelectorAll('.loginDarkModeText').forEach(el => {
-        el.textContent = isDark ? 'Dark Mode' : 'Light Mode';
-    });
 }
 
 // ============ INITIALIZATION ============
