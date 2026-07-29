@@ -864,12 +864,77 @@
     <div class="auth-overlay" id="authOverlay">
         <div class="auth-card">
 
-            <!-- Curved Teal Banner Header (with School Next Pro Brand) -->
-            <div class="auth-banner-header">
-                <div class="auth-brand-badge">
-                    <i class="fas fa-graduation-cap"></i> School Next <span>Pro</span>
-                </div>
-                <h2 id="authBannerTitle">LOGIN YOUR SCHOOL</h2>
+            <!-- Circular Logo with Rocket & Open Book SVG -->
+            <div class="glass-avatar-circle login-logo-circle">
+                <svg class="sn-logo-svg" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <!-- Blue Gradient for Left Book Cover -->
+                        <linearGradient id="bookLeftGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#38bdf8" />
+                            <stop offset="100%" stop-color="#0284c7" />
+                        </linearGradient>
+                        <!-- Deep Blue Gradient for Right Book Cover & Spine -->
+                        <linearGradient id="bookRightGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#0284c7" />
+                            <stop offset="100%" stop-color="#0f3792" />
+                        </linearGradient>
+                        <!-- Orange/Yellow Gradient for Swoosh Arrow -->
+                        <linearGradient id="arrowGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#38bdf8" />
+                            <stop offset="50%" stop-color="#f59e0b" />
+                            <stop offset="100%" stop-color="#ff6b00" />
+                        </linearGradient>
+                        <!-- Rocket Body Gradient -->
+                        <linearGradient id="rocketBodyGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#38bdf8" />
+                            <stop offset="100%" stop-color="#0284c7" />
+                        </linearGradient>
+                        <!-- Rocket Wings & Flame Gradient -->
+                        <linearGradient id="rocketFlameGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#fbbf24" />
+                            <stop offset="100%" stop-color="#f97316" />
+                        </linearGradient>
+                    </defs>
+
+                    <!-- OPEN BOOK VECTOR -->
+                    <!-- Left Page Outer Spine -->
+                    <path d="M 80 128 C 55 110 25 116 16 119 V 58 C 25 55 55 49 80 67 Z" fill="url(#bookLeftGrad)" opacity="0.95"/>
+                    <!-- Left Page Inner Lines -->
+                    <path d="M 32 64 C 48 59 67 63 76 71 V 119 C 67 111 48 107 32 112 Z" fill="#ffffff" opacity="0.9"/>
+                    
+                    <!-- Right Page Outer Spine -->
+                    <path d="M 80 128 C 105 110 135 116 144 119 V 58 C 135 55 105 49 80 67 Z" fill="url(#bookRightGrad)"/>
+                    <!-- Right Page Inner Lines -->
+                    <path d="M 128 64 C 112 59 93 63 84 71 V 119 C 93 111 112 107 128 112 Z" fill="#e0f2fe" opacity="0.9"/>
+                    <!-- Center Spine Line -->
+                    <path d="M 80 67 V 128" stroke="#0369a1" stroke-width="3" stroke-linecap="round"/>
+
+                    <!-- SWOOSH ACCELERATION ARROW -->
+                    <path d="M 14 90 C 25 112 65 105 110 65 L 140 40 L 136 68 C 100 95 50 122 14 90 Z" fill="url(#arrowGrad)"/>
+
+                    <!-- ROCKET LAUNCHING TOP -->
+                    <!-- Yellow Star Behind Rocket Nose -->
+                    <path d="M 80 18 L 84 28 L 94 28 L 86 34 L 89 44 L 80 38 L 71 44 L 74 34 L 66 28 L 76 28 Z" fill="#fbbf24"/>
+                    <!-- Rocket Exhaust Flame -->
+                    <path d="M 76 46 Q 80 58 84 46 Q 80 52 76 46 Z" fill="url(#rocketFlameGrad)"/>
+                    <!-- Rocket Body -->
+                    <path d="M 80 22 C 87 32 87 45 87 48 H 73 C 73 45 73 32 80 22 Z" fill="url(#rocketBodyGrad)"/>
+                    <!-- Rocket Left Wing -->
+                    <path d="M 73 40 L 67 48 H 73 Z" fill="#0284c7"/>
+                    <!-- Rocket Right Wing -->
+                    <path d="M 87 40 L 93 48 H 87 Z" fill="#0369a1"/>
+                    <!-- Rocket Nose Cone Star -->
+                    <circle cx="80" cy="34" r="2.5" fill="#ffffff"/>
+                </svg>
+            </div>
+
+            <!-- Brand Name & Tagline Below Circle Matching Color Scheme -->
+            <div class="login-brand-header">
+                <h1 class="login-brand-title">
+                    <span class="brand-school">SCHOOL</span>
+                    <span class="brand-next">NEXT</span>
+                </h1>
+                <p class="login-brand-tagline" style="color:#ffffff !important; font-weight:800 !important; font-size:0.85rem !important; letter-spacing:1px; text-shadow:0 2px 8px rgba(0,0,0,0.9); opacity:1 !important;">Empowering Future Generations</p>
             </div>
 
             <!-- Auth Tabs (Login / Sign Up) -->
@@ -886,8 +951,8 @@
             <form id="loginForm" class="auth-form login-image-style" onsubmit="return handleLogin(event)">
 
                 <div class="line-input-group full-width">
-                    <i class="fas fa-hashtag line-input-icon"></i>
-                    <input type="text" id="loginSchoolCode" placeholder="School Code (e.g. SCH001)" required
+                    <i class="fas fa-envelope line-input-icon"></i>
+                    <input type="text" id="loginSchoolCode" placeholder="School Code or Email ID" required
                         autocomplete="off">
                 </div>
 
