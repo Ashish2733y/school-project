@@ -2239,19 +2239,22 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 1rem;
+    padding: clamp(0.5rem, 2.5vh, 1.5rem);
     background: radial-gradient(circle at 50% 35%, #0d214a 0%, #071330 50%, #030818 100%);
     overflow-y: auto;
     overscroll-behavior: contain;
 }
 
 .auth-card {
-    width: 100%;
-    max-width: 410px;
+    width: min(92vw, 410px);
+    max-height: min(92vh, 680px);
     background: rgba(12, 28, 64, 0.35);
     border: 1.5px solid rgba(147, 197, 253, 0.28);
-    border-radius: 28px;
-    overflow: hidden;
+    border-radius: clamp(20px, 4vw, 28px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(147, 197, 253, 0.3) transparent;
     box-shadow: 0 25px 65px rgba(0, 5, 20, 0.75), 0 0 30px rgba(30, 80, 200, 0.25);
     animation: cardIn 0.5s var(--ease-spring);
     position: relative;
@@ -2285,32 +2288,37 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 2rem 1.5rem 0.8rem;
+    padding: clamp(1.2rem, 3.5vh, 2rem) clamp(1rem, 4vw, 1.5rem) clamp(0.4rem, 1.5vh, 0.8rem);
     text-align: center;
     position: relative;
     z-index: 3;
 }
 
 .brand-logo-badge {
-    width: 76px;
-    height: 76px;
+    width: clamp(54px, 11vh, 76px);
+    height: clamp(54px, 11vh, 76px);
     border-radius: 50%;
     background: radial-gradient(circle, #0e2246 0%, #061228 100%);
     border: 2px solid rgba(147, 197, 253, 0.4);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 0.8rem;
+    margin-bottom: clamp(0.35rem, 1vh, 0.8rem);
     box-shadow: 0 0 20px rgba(56, 189, 248, 0.3), inset 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+.brand-logo-badge svg {
+    width: clamp(32px, 7vh, 46px);
+    height: clamp(32px, 7vh, 46px);
 }
 
 .brand-title {
     font-family: var(--font-primary);
-    font-size: 1.35rem;
+    font-size: clamp(1.1rem, 3.8vw, 1.35rem);
     font-weight: 900;
     letter-spacing: 2px;
     color: #38bdf8;
-    margin: 0 0 0.2rem;
+    margin: 0 0 0.15rem;
     text-transform: uppercase;
 }
 
@@ -2320,7 +2328,7 @@ body {
 
 .brand-subtitle {
     color: rgba(255, 255, 255, 0.85);
-    font-size: 0.85rem;
+    font-size: clamp(0.75rem, 2.5vw, 0.85rem);
     font-weight: 600;
     margin: 0;
     letter-spacing: 0.5px;
@@ -2330,11 +2338,11 @@ body {
 .auth-tabs {
     display: flex;
     gap: 0.4rem;
-    padding: 0.35rem;
+    padding: 0.3rem;
     background: rgba(6, 16, 38, 0.85);
     border-radius: 12px;
     border: 1px solid rgba(147, 197, 253, 0.2);
-    margin: 0.6rem 1.8rem 0.8rem;
+    margin: clamp(0.4rem, 1.5vh, 0.6rem) clamp(1rem, 4vw, 1.8rem) clamp(0.4rem, 1.5vh, 0.8rem);
     position: relative;
     z-index: 3;
 }
@@ -2344,14 +2352,14 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
-    padding: 0.55rem 1rem;
+    gap: 0.4rem;
+    padding: clamp(0.4rem, 1vh, 0.55rem) 0.8rem;
     background: transparent;
     border: none;
     border-radius: 8px;
     color: rgba(224, 231, 255, 0.65);
     font-family: var(--font-primary);
-    font-size: 0.88rem;
+    font-size: clamp(0.8rem, 2.8vw, 0.88rem);
     font-weight: 700;
     cursor: pointer;
     transition: all 0.25s ease;
@@ -2371,10 +2379,10 @@ body {
 
 /* Form Container */
 .auth-form.login-image-style {
-    padding: 1.5rem 2.2rem 2rem;
+    padding: clamp(1rem, 2vh, 1.5rem) clamp(1.2rem, 5vw, 2.2rem) clamp(1.2rem, 2.5vh, 2rem);
     display: flex;
     flex-direction: column;
-    gap: 1.3rem;
+    gap: clamp(0.8rem, 2vh, 1.3rem);
     position: relative;
     z-index: 3;
 }
@@ -3655,4 +3663,81 @@ html.light-mode .auth-form input:-webkit-autofill:active {
 
 .text-gold {
     color: var(--gold-bright);
+}
+
+/* ── RESPONSIVE AUTH OVERLAY FOR MOBILE PHONES & SHORT VIEWPORTS ────────── */
+@media (max-width: 480px) {
+    .auth-overlay {
+        padding: 0.6rem;
+    }
+
+    .auth-card {
+        width: 95vw;
+        max-height: 94vh;
+        border-radius: 20px;
+    }
+
+    .auth-header-brand {
+        padding: 1.2rem 1rem 0.4rem;
+    }
+
+    .auth-tabs {
+        margin: 0.4rem 1rem 0.5rem;
+    }
+
+    .auth-form.login-image-style {
+        padding: 0.9rem 1.2rem 1.3rem;
+        gap: 0.85rem;
+    }
+
+    .line-input-group {
+        padding: 0.45rem 0.1rem;
+    }
+
+    .remember-me-label, .forgot-link {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-height: 700px) {
+    .auth-card {
+        max-height: 96vh;
+    }
+
+    .brand-logo-badge {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 0.3rem;
+    }
+
+    .brand-logo-badge svg {
+        width: 28px;
+        height: 28px;
+    }
+
+    .brand-title {
+        font-size: 1.05rem;
+    }
+
+    .brand-subtitle {
+        font-size: 0.72rem;
+    }
+
+    .auth-header-brand {
+        padding: 0.9rem 1rem 0.3rem;
+    }
+
+    .auth-tabs {
+        margin: 0.3rem 1rem 0.4rem;
+    }
+
+    .auth-form.login-image-style {
+        padding: 0.8rem 1.2rem 1.1rem;
+        gap: 0.75rem;
+    }
+
+    .login-image-btn {
+        height: 42px !important;
+        font-size: 0.92rem !important;
+    }
 }
