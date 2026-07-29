@@ -864,21 +864,23 @@
     <div class="auth-overlay" id="authOverlay">
         <div class="auth-card">
 
-            <!-- Curved Teal Banner Header (with School Next Pro Brand & Dark Mode Toggle) -->
-            <div class="auth-banner-header">
-                <div class="auth-banner-top">
-                    <div class="auth-brand-badge">
-                        <i class="fas fa-graduation-cap"></i> School Next <span>Pro</span>
-                    </div>
-                    <!-- Login Form Dark Mode Toggle Pill -->
-                    <div class="stat-pill dark-mode-pill login-dark-toggle" onclick="toggleDarkMode()"
-                        title="Toggle Dark / Light Mode" aria-label="Toggle dark mode" role="button" tabindex="0"
-                        onkeydown="if(event.key==='Enter'||event.key===' ')toggleDarkMode()">
-                        <i class="fas fa-moon loginDarkModeIcon" aria-hidden="true"></i>
-                        <span class="loginDarkModeText">Dark Mode</span>
-                    </div>
+            <!-- Logo Badge & Brand Title matching reference image -->
+            <div class="auth-header-brand">
+                <div class="brand-logo-badge">
+                    <svg viewBox="0 0 64 64" class="brand-logo-svg" width="46" height="46">
+                        <path d="M32 10 L8 24 L32 38 L56 24 Z" fill="url(#gradBook)" />
+                        <path d="M12 28 L12 44 C12 48 32 54 32 54 C32 54 52 48 52 44 L52 28" fill="none" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+                        <polygon points="32,4 35,12 43,12 37,17 39,25 32,20 25,25 27,17 21,12 29,12" fill="#f59e0b"/>
+                        <defs>
+                            <linearGradient id="gradBook" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#38bdf8" />
+                                <stop offset="100%" stop-color="#f97316" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
                 </div>
-                <h2 id="authBannerTitle">LOGIN YOUR SCHOOL</h2>
+                <h1 class="brand-title">SCHOOL <span>NEXT</span></h1>
+                <p class="brand-subtitle">Empowering Future Generations</p>
             </div>
 
             <!-- Auth Tabs (Login / Sign Up) -->
@@ -891,12 +893,12 @@
                 </button>
             </div>
 
-            <!-- LOGIN FORM (Line Input Style matching image) -->
+            <!-- LOGIN FORM matching reference image -->
             <form id="loginForm" class="auth-form login-image-style" onsubmit="return handleLogin(event)">
 
                 <div class="line-input-group full-width">
-                    <i class="fas fa-hashtag line-input-icon"></i>
-                    <input type="text" id="loginSchoolCode" placeholder="School Code (e.g. SCH001)" required
+                    <i class="fas fa-envelope line-input-icon"></i>
+                    <input type="text" id="loginSchoolCode" placeholder="School Code or Email ID" required
                         autocomplete="off">
                 </div>
 
@@ -915,7 +917,7 @@
                     <a href="#" onclick="openForgotPasswordModal(event)" class="forgot-link">Forgot Password?</a>
                 </div>
 
-                <!-- Teal Login Button -->
+                <!-- Blue Login Button matching reference image -->
                 <button type="submit" class="btn-primary btn-submit full-width login-image-btn">
                     LOGIN
                 </button>

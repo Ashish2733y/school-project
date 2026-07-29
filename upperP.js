@@ -1578,6 +1578,9 @@ function checkAuthStatus() {
     if (activeSchoolCode && schoolAccounts[activeSchoolCode]) {
         authOverlay.style.display = 'none';
         document.body.style.overflow = '';
+        // Admission & Student Fee System opens in Light Mode
+        document.documentElement.classList.add('light-mode');
+        updateDarkModeUI(false);
         loadSchoolStudentData();
         updateHeaderStats();
         applySchoolProfileHeader(schoolAccounts[activeSchoolCode]);
@@ -1586,6 +1589,9 @@ function checkAuthStatus() {
         updateHeaderStats();
         authOverlay.style.display = 'flex';
         document.body.style.overflow = 'hidden';
+        // Login Form opens in Dark Mode
+        document.documentElement.classList.remove('light-mode');
+        updateDarkModeUI(true);
         const hasAccounts = Object.keys(schoolAccounts).length > 0;
         if (hasAccounts) {
             switchAuthTab('login');
@@ -1603,6 +1609,10 @@ function switchAuthTab(tab) {
     const bannerTitle = document.getElementById('authBannerTitle');
 
     if (!loginBtn || !signupBtn || !loginForm || !signupForm) return;
+
+    // Ensure Auth overlay is in Dark Mode
+    document.documentElement.classList.remove('light-mode');
+    updateDarkModeUI(true);
 
     if (tab === 'login') {
         loginBtn.classList.add('active');
@@ -1757,6 +1767,10 @@ async function handleLogin(event) {
 function executeLoginSuccess(code, account) {
     activeSchoolCode = code;
     localStorage.setItem('schoolnext_active_user', code);
+
+    // Admission & School Dashboard opens in Light Mode
+    document.documentElement.classList.add('light-mode');
+    updateDarkModeUI(false);
 
     loadSchoolStudentData();
     updateHeaderStats();
