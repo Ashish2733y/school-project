@@ -2730,240 +2730,67 @@ html.light-mode table tr:nth-child(even) td {
     transform: translateY(-1px);
 }
 
-/* ══════════════════════════════════════════════════════════════
-   BLUE GLASSMORPHIC LOGIN CARD MATCHING REFERENCE IMAGE (ALWAYS PERPETUAL DARK MODE)
-   ══════════════════════════════════════════════════════════════ */
-.auth-overlay,
-html.light-mode .auth-overlay {
-    background: radial-gradient(circle at 50% 40%, #1e40af 0%, #0f172a 70%, #030712 100%) !important;
-    backdrop-filter: blur(20px) !important;
-    padding: 1.5rem 1rem !important;
-    overflow: hidden !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-}
-
-.auth-card,
 html.light-mode .auth-card {
-    background: rgba(255, 255, 255, 0.07) !important;
-    border: 1.5px solid rgba(255, 255, 255, 0.22) !important;
-    border-radius: 32px !important;
-    padding: 1.8rem 2.2rem 1.6rem 2.2rem !important;
-    width: 100%;
-    max-width: 420px !important;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4), 0 0 50px rgba(37, 99, 235, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.25) !important;
-    backdrop-filter: blur(28px) !important;
-    -webkit-backdrop-filter: blur(28px) !important;
-    position: relative;
-    color: #ffffff !important;
-    margin: auto !important;
-    overflow: hidden !important;
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.18) !important;
+    color: #0f172a !important;
 }
 
-/* Ensure Signup Form has controlled height & scrollbar when active */
-#signupForm {
-    max-height: calc(85vh - 200px);
-    overflow-y: auto;
-    padding-right: 4px;
-}
-
-#signupForm::-webkit-scrollbar {
-    width: 4px;
-}
-#signupForm::-webkit-scrollbar-thumb {
-    background: rgba(96, 165, 250, 0.4);
-    border-radius: 4px;
-}
-
-/* Hide scrollbar for auth-card */
-.auth-card::-webkit-scrollbar {
-    display: none;
-}
-.auth-card {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-/* Diagonal reflection light line across the glass card */
-.auth-card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent 46%, rgba(255, 255, 255, 0.08) 50%, transparent 54%);
-    pointer-events: none;
-}
-
-/* Large Circular Logo Box with SVG Rocket & Book */
-.glass-avatar-circle.login-logo-circle {
-    width: 96px;
-    height: 96px;
-    margin: 0 auto 0.4rem auto;
-    border-radius: 50%;
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.75) 0%, rgba(30, 58, 138, 0.45) 100%) !important;
-    border: 1.8px solid rgba(255, 255, 255, 0.35) !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 20px rgba(56, 189, 248, 0.25), inset 0 2px 4px rgba(255, 255, 255, 0.3) !important;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 8px;
-}
-
-.sn-logo-svg {
-    width: 100%;
-    height: 100%;
-    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4));
-    transition: transform 0.4s ease;
-}
-
-.glass-avatar-circle.login-logo-circle:hover .sn-logo-svg {
-    transform: scale(1.06) rotate(-2deg);
-}
-
-/* SCHOOL NEXT Title & Tagline Below Circle Matching Image Colors */
-.login-brand-header {
-    text-align: center;
-    margin-bottom: 0.65rem;
-}
-
-.login-brand-title {
-    font-family: var(--font-primary), 'Inter', sans-serif;
-    font-size: 1.35rem;
-    font-weight: 900;
-    letter-spacing: 2px;
-    line-height: 1.1;
-    margin: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.35rem;
-}
-
-.login-brand-title .brand-school {
-    color: #1e3a8a;
-    background: linear-gradient(180deg, #38bdf8 0%, #1d4ed8 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 10px rgba(30, 58, 138, 0.3);
-}
-
-.login-brand-title .brand-next {
-    color: #f97316;
-    background: linear-gradient(180deg, #fbbf24 0%, #ea580c 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 2px 10px rgba(234, 88, 12, 0.3);
-}
-
-.login-brand-tagline {
-    font-size: 0.82rem;
-    color: #ffffff !important;
-    font-weight: 700;
-    letter-spacing: 1.2px;
-    margin-top: 0.25rem;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.8);
-    opacity: 1 !important;
-}
-
-/* Auth Tabs Styling */
-.auth-tabs {
-    display: flex;
-    gap: 0.5rem;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.auth-tab-btn,
 html.light-mode .auth-tab-btn {
-    flex: 1;
-    padding: 0.6rem 0.8rem;
-    background: transparent !important;
-    border: none !important;
-    border-bottom: 2px solid transparent !important;
-    color: rgba(255, 255, 255, 0.6) !important;
-    font-weight: 600;
-    font-size: 0.88rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    color: #64748b !important;
 }
 
-.auth-tab-btn.active,
 html.light-mode .auth-tab-btn.active {
-    color: #60a5fa !important;
-    border-bottom-color: #60a5fa !important;
+    color: #0d9488 !important;
+    border-bottom: 2.5px solid #0d9488 !important;
 }
 
-/* Clean Underline Input Groups Matching Reference Image */
-.line-input-group,
 html.light-mode .line-input-group {
-    background: transparent !important;
-    border: none !important;
-    border-bottom: 1.5px solid rgba(255, 255, 255, 0.35) !important;
-    border-radius: 0 !important;
-    padding: 0.65rem 0.2rem !important;
-    margin-bottom: 0.9rem;
-    transition: all 0.3s ease;
+    background: #f8fafc !important;
+    border-color: #cbd5e1 !important;
 }
 
-.line-input-group:focus-within,
 html.light-mode .line-input-group:focus-within {
-    border-bottom-color: #60a5fa !important;
-    box-shadow: 0 4px 15px -4px rgba(96, 165, 250, 0.4) !important;
+    background: #ffffff !important;
+    border-color: #0d9488 !important;
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15) !important;
 }
 
-.line-input-group input,
 html.light-mode .line-input-group input {
-    background: transparent !important;
-    color: #ffffff !important;
-    font-size: 1.05rem;
-    letter-spacing: 0.5px;
-    font-weight: 500;
+    color: #0f172a !important;
 }
 
-.line-input-group input::placeholder,
 html.light-mode .line-input-group input::placeholder {
-    color: rgba(219, 234, 254, 0.65) !important;
-    font-weight: 400;
+    color: #64748b !important;
 }
 
-.line-input-icon,
 html.light-mode .line-input-icon {
-    color: #ffffff !important;
-    font-size: 1.1rem !important;
-    opacity: 0.9;
+    color: #0d9488 !important;
 }
 
-.password-toggle-icon,
 html.light-mode .password-toggle-icon {
-    color: rgba(255, 255, 255, 0.75) !important;
+    color: #64748b !important;
 }
 
-/* Custom Deep Royal Blue LOGIN Button Matching Image */
-.login-image-btn,
-html.light-mode .login-image-btn {
-    background: linear-gradient(180deg, #1d4ed8 0%, #0f3697 100%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    border-radius: 4px !important;
-    height: 52px !important;
-    font-size: 1.05rem !important;
-    font-weight: 800 !important;
-    letter-spacing: 3px !important;
-    text-transform: uppercase !important;
-    color: #ffffff !important;
-    cursor: pointer;
-    margin-top: 1.5rem !important;
-    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.4) !important;
-    transition: all 0.25s ease !important;
+html.light-mode .remember-me-label {
+    color: #334155 !important;
 }
 
-.login-image-btn:hover,
-html.light-mode .login-image-btn:hover {
-    background: linear-gradient(180deg, #2563eb 0%, #1d4ed8 100%) !important;
-    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.4) !important;
-    transform: translateY(-1px);
+html.light-mode .forgot-link {
+    color: #0d9488 !important;
+}
+
+html.light-mode .forgot-link:hover {
+    color: #0f766e !important;
+}
+
+html.light-mode .auth-register-text {
+    color: #475569 !important;
+}
+
+html.light-mode .auth-register-text a {
+    color: #0d9488 !important;
 }
 
 /* Fix browser autofill & typing white background overlay */
@@ -2974,11 +2801,7 @@ html.light-mode .login-image-btn:hover {
 .auth-form input:-webkit-autofill,
 .auth-form input:-webkit-autofill:hover,
 .auth-form input:-webkit-autofill:focus,
-.auth-form input:-webkit-autofill:active,
-html.light-mode .line-input-group input:-webkit-autofill,
-html.light-mode .line-input-group input:-webkit-autofill:hover,
-html.light-mode .line-input-group input:-webkit-autofill:focus,
-html.light-mode .line-input-group input:-webkit-autofill:active {
+.auth-form input:-webkit-autofill:active {
     -webkit-text-fill-color: #ffffff !important;
     -webkit-box-shadow: 0 0 0px 1000px #0a1626 inset !important;
     transition: background-color 5000s ease-in-out 0s !important;
@@ -2986,9 +2809,20 @@ html.light-mode .line-input-group input:-webkit-autofill:active {
     border-radius: 0px !important;
 }
 
+html.light-mode .line-input-group input:-webkit-autofill,
+html.light-mode .line-input-group input:-webkit-autofill:hover,
+html.light-mode .line-input-group input:-webkit-autofill:focus,
+html.light-mode .line-input-group input:-webkit-autofill:active,
+html.light-mode .auth-form input:-webkit-autofill,
+html.light-mode .auth-form input:-webkit-autofill:hover,
+html.light-mode .auth-form input:-webkit-autofill:focus,
+html.light-mode .auth-form input:-webkit-autofill:active {
+    -webkit-text-fill-color: #0f172a !important;
+    -webkit-box-shadow: 0 0 0px 1000px #f8fafc inset !important;
+}
+
 /* Options Row (Remember me & Forgot Password) */
-.auth-options-row,
-html.light-mode .auth-options-row {
+.auth-options-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -2996,46 +2830,28 @@ html.light-mode .auth-options-row {
     margin-top: 0.2rem;
 }
 
-.remember-me-label,
-html.light-mode .remember-me-label {
+.remember-me-label {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: #94a3b8 !important;
+    color: #94a3b8;
     cursor: pointer;
     user-select: none;
 }
 
 .remember-me-label input[type="checkbox"] {
-    accent-color: #3b82f6;
+    accent-color: #14b8a6;
     width: 16px;
     height: 16px;
     cursor: pointer;
 }
 
-.forgot-link,
-html.light-mode .forgot-link {
-    color: #60a5fa !important;
+.forgot-link {
+    color: #2dd4bf;
     font-style: italic;
     font-weight: 600;
     text-decoration: none;
     transition: color 0.2s;
-}
-
-.forgot-link:hover,
-html.light-mode .forgot-link:hover {
-    color: #93c5fd !important;
-    text-decoration: underline;
-}
-
-.auth-register-text,
-html.light-mode .auth-register-text {
-    color: #94a3b8 !important;
-}
-
-.auth-register-text a,
-html.light-mode .auth-register-text a {
-    color: #60a5fa !important;
 }
 
 .forgot-link:hover {
